@@ -1,10 +1,12 @@
 import * as React from 'react';
 import {Text, View, StatusBar, ImageBackground} from 'react-native';
+import { createStackNavigator, StackNavigationProp } from '@react-navigation/stack';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Feather';
 import HomeScreen from './Screen/Home/HomeScreen';
+import DetailScreen from './Screen/Home/DetailScreen';
 
 function SettingsScreen() {
   return (
@@ -38,6 +40,7 @@ const MyTheme = {
 };
 
 const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
@@ -76,7 +79,12 @@ export default function App() {
             ),
             tabBarStyle: {height: 70, backgroundColor: 'white'},
           })}>
-          <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+          <Tab.Screen name="Home" options={{ headerShown: false }} >{() => (
+          <Stack.Navigator>
+            <Stack.Screen name="HomeScreen" component={HomeScreen} />
+            <Stack.Screen name="DetailScreen" component={DetailScreen} />
+          </Stack.Navigator>
+        )}</Tab.Screen>
           <Tab.Screen name="Favourite" component={FavouriteScreen} />
           <Tab.Screen name="Profile" component={ProfileScreen} />
           <Tab.Screen name="Settings" component={SettingsScreen} />

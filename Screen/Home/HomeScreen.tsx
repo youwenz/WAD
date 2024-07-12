@@ -7,6 +7,7 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import TravelCard from './TravelCard';
 import Homestay from '../Homestay';
 const image1 = require('../../assets/images/image1.jpg');
@@ -25,7 +26,14 @@ const homestayList: Homestay[] = [
   new Homestay('Another Place', image3, 4.5, 'Another description...'),
   new Homestay('Another Place', image4, 4.5, 'Another description...'),
 ];
-function HomeScreen() {
+
+
+const HomeScreen: React.FC = () => {
+  const navigation = useNavigation();
+
+  const navigateToDetail = (item: Homestay) => {
+    navigation.navigate('DetailScreen', { item });
+  };
   return (
     <View style={styles.container}>
         <Image source={coverImage} style={styles.coverImage} /> 
@@ -35,11 +43,13 @@ function HomeScreen() {
         horizontal={true}
         style={styles.list}
         renderItem={({item}) => (
+          <TouchableOpacity onPress={() => navigateToDetail(item)}>
           <TravelCard
             title={item.title}
             description={item.description}
             imageUrl={item.imageUrl}
           />
+          </TouchableOpacity>
         )}
       />
     </View>
