@@ -9,6 +9,7 @@ import {
   ImageSourcePropType,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {PRIMARY, SECONDARY} from '../Style/Color';
 
 interface props {
   title: string;
@@ -30,7 +31,7 @@ const TravelCard: React.FC<props> = ({title, description, imageUrl}) => {
             <Icon
               name={favourite ? 'heart' : 'heart-o'}
               size={20}
-              color="black"
+              color={PRIMARY}
               style={styles.icon}
             />
           </TouchableOpacity>
@@ -70,13 +71,13 @@ const styles = StyleSheet.create({
     width: 232,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: '#E6E6E6',
+    borderColor: SECONDARY,
     alignItems: 'center',
   },
   cardTitle: {
     fontFamily: 'Poppins-SemiBold',
     fontSize: 16,
-    color: 'black',
+    color: PRIMARY,
     alignSelf: 'center',
     marginTop: 6,
   },
@@ -97,7 +98,7 @@ const styles = StyleSheet.create({
   cardReview: {
     fontFamily: 'Poppins-Regular',
     fontSize: 10,
-    color: 'black',
+    color: PRIMARY,
     marginLeft: 6,
   },
   review: {
@@ -112,7 +113,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontFamily: 'Poppins-Regular',
-    color: '#5F5F5F',
+    color: PRIMARY,
     fontSize: 12,
     marginTop: 3,
   },
