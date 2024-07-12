@@ -16,6 +16,7 @@ import {useNavigation} from '@react-navigation/native';
 import ArrowIcon from 'react-native-vector-icons/FontAwesome6';
 import DollarIcon from 'react-native-vector-icons/FontAwesome5';
 import {PRIMARY, SECONDARY} from '../Style/Color';
+import ReviewCard from './ReviewCard';
 
 const image1 = require('../../assets/images/image1.jpg');
 const image2 = require('../../assets/images/image2.jpeg');
@@ -30,18 +31,12 @@ function DetailScreen({route}) {
 
   return (
     <View style={styles.container}>
+      
       <ScrollView style={{marginBottom: 100}}>
         <ImageBackground
           source={item.imageUrl}
           style={[styles.coverImage, {width: screenWidth}]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
-            <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.favouriteIcon} onPress={() => {}}>
-            <Icon name={'heart'} size={18} color="#776B5D" />
-          </TouchableOpacity>
+          
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
             style={styles.gradient}>
@@ -91,14 +86,11 @@ function DetailScreen({route}) {
             </Text>
           </View>
           <View style={styles.description}>
-            <Text style={styles.descriptionHeading}>About</Text>
-            <Text style={styles.descriptionText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Convallis
-              condimentum morbi non egestas enim amet sagittis. Proin sed
-              aliquet rhoncus ut pellentesque ullamcorper sit eget ac.Sit nisi,
-              cras amet varius eget egestas pellentesque. Cursus gravida euismod
-              non...
-            </Text>
+            <Text style={styles.descriptionHeading}>Reviews</Text>
+            <Text style={styles.reviewText}>100 reviews</Text>
+            <ReviewCard />
+            <ReviewCard />
+            <ReviewCard />
           </View>
         </View>
       </ScrollView>
@@ -114,6 +106,14 @@ function DetailScreen({route}) {
           </TouchableOpacity>
         </View>
       </View>
+      <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}>
+            <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.favouriteIcon} onPress={() => {}}>
+            <Icon name={'heart'} size={18} color="#776B5D" />
+          </TouchableOpacity>
     </View>
   );
 }
@@ -181,25 +181,27 @@ const styles = StyleSheet.create({
   },
   backButton: {
     position: 'absolute',
-    top: 24,
-    left: 24,
-    width: 36,
-    height: 36,
+    top: 30,
+    left: 30,
+    width: 44,
+    height: 44,
     borderRadius: 50,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 5
   },
   favouriteIcon: {
     position: 'absolute',
-    top: 24,
-    left: 355,
-    width: 36,
-    height: 36,
+    top: 30,
+    left: 340,
+    width: 44,
+    height: 44,
     borderRadius: 50,
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
+    elevation: 5
   },
   features: {
     height: 45,
@@ -227,7 +229,7 @@ const styles = StyleSheet.create({
   descriptionHeading: {
     fontFamily: 'Poppins-SemiBold',
     color: PRIMARY,
-    fontSize: 20,
+    fontSize: 22,
     marginBottom: 8,
   },
   description: {
@@ -236,7 +238,7 @@ const styles = StyleSheet.create({
   },
   descriptionText: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 12,
+    fontSize: 16,
     color: PRIMARY,
   },
   button: {
@@ -253,7 +255,7 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   bottomBar: {
-    height: 62,
+    height: 52,
     marginTop: 30,
     marginLeft: 20,
     justifyContent: 'space-between',
@@ -280,5 +282,12 @@ const styles = StyleSheet.create({
     right: 0,
     height: 92,
   },
+  reviewText: {
+    marginTop: -15,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    color: PRIMARY,
+  },
+  
 });
 export default DetailScreen;

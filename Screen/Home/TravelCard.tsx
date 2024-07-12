@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY, SECONDARY} from '../Style/Color';
-
+import Ratings from './Ratings';
 interface props {
   title: string;
   description: string;
@@ -38,16 +38,7 @@ const TravelCard: React.FC<props> = ({title, description, imageUrl}) => {
         </View>
       </View>
       <Text style={styles.cardTitle}>{title}</Text>
-      <View style={styles.review}>
-        <View style={styles.ratings}>
-          <Icon name="star" size={15} color="#FFB23F"></Icon>
-          <Icon name="star" size={15} color="#FFB23F"></Icon>
-          <Icon name="star" size={15} color="#FFB23F"></Icon>
-          <Icon name="star" size={15} color="#FFB23F"></Icon>
-          <Icon name="star" size={15} color="#FFB23F"></Icon>
-        </View>
-        <Text style={styles.cardReview}>100 reviews</Text>
-      </View>
+      <Ratings star={4.5} text="98 reviews"/>
       <Text style={styles.description}>{description}</Text>
     </View>
   );
@@ -66,7 +57,7 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 15,
   },
   cardBackground: {
-    marginRight: 20,
+    marginLeft: 20,
     height: 320,
     width: 232,
     borderRadius: 15,
@@ -86,30 +77,14 @@ const styles = StyleSheet.create({
     top: 10,
     right: 10,
     backgroundColor: 'white',
-    height: 35,
-    width: 35,
+    height: 40,
+    width: 40,
     borderRadius: 30,
     justifyContent: 'center',
+    elevation: 15
   },
   icon: {
     alignSelf: 'center',
-    backgroundColor: 'transparent', // Set background color to transparent if needed
-  },
-  cardReview: {
-    fontFamily: 'Poppins-Regular',
-    fontSize: 10,
-    color: PRIMARY,
-    marginLeft: 6,
-  },
-  review: {
-    flexDirection: 'row',
-    marginTop: 3,
-  },
-  ratings: {
-    flexDirection: 'row',
-    width: 85,
-    height: 15,
-    justifyContent: 'space-around',
   },
   description: {
     fontFamily: 'Poppins-Regular',

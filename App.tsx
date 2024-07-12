@@ -9,30 +9,9 @@ import HomeScreen from './Screen/Home/HomeScreen';
 import DetailScreen from './Screen/Home/DetailScreen';
 import { PRIMARY, SECONDARY } from './Screen/Style/Color';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
-
-function SettingsScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
-
-function FavouriteScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Favourite!</Text>
-    </View>
-  );
-}
-
-function ProfileScreen() {
-  return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
+import ProfileScreen from './Screen/Profile/ProfileScreen';
+import NotificationScreen from './Screen/Notification/NotificationScreen';
+import FavouriteScreen from './Screen/Favourite/FavouriteScreen';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -107,7 +86,7 @@ function MainTabScreen() {
       <Tab.Screen name="Notification" component={ProfileScreen} options={{
             headerShown: false,
           }}/>
-      <Tab.Screen name="Profile" component={SettingsScreen} options={{
+      <Tab.Screen name="Profile" component={NotificationScreen} options={{
             headerShown: false,
           }}/>
     </Tab.Navigator>
