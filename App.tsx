@@ -12,17 +12,18 @@ import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import ProfileScreen from './Screen/Profile/ProfileScreen';
 import NotificationScreen from './Screen/Notification/NotificationScreen';
 import FavouriteScreen from './Screen/Favourite/FavouriteScreen';
-
+import CalendarScreen from './Screen/Home/CalendarScreen';
+import { RootStackParamList } from './Screen/Type/NavigationParamList';
 const MyTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    background: 'white', // Set background color of the entire app
+    background: 'white',
   },
 };
 
 const Tab = createBottomTabNavigator();
-const Stack = createStackNavigator();
+const Stack = createStackNavigator<RootStackParamList>();
 
 export default function App() {
   return (
@@ -32,6 +33,10 @@ export default function App() {
         <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={MainTabScreen} />
           <Stack.Screen name="DetailScreen" component={DetailScreen} />
+          <Stack.Screen name="CalendarScreen" component={CalendarScreen} options={{
+            headerShown: true,
+            title: 'Available date'
+          }}/>
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

@@ -15,6 +15,7 @@ import Homestay from '../Homestay';
 import {PRIMARY, SECONDARY} from '../Style/Color';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
+
 const image1 = require('../../assets/images/image1.jpg');
 const image2 = require('../../assets/images/image2.jpeg');
 const image3 = require('../../assets/images/image3.jpg');

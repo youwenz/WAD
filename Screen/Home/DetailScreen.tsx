@@ -17,26 +17,37 @@ import ArrowIcon from 'react-native-vector-icons/FontAwesome6';
 import DollarIcon from 'react-native-vector-icons/FontAwesome5';
 import {PRIMARY, SECONDARY} from '../Style/Color';
 import ReviewCard from './ReviewCard';
+import BottomBar from './BottomBar';
+import {
+  RootStackParamList,
+  RootStackNavigationProp,
+} from '../Type/NavigationParamList';
+import CustomButton from './CustomButton';
+import {RouteProp} from '@react-navigation/native';
 
+type Props = {
+  route: RouteProp<RootStackParamList, 'DetailScreen'>;
+};
 const image1 = require('../../assets/images/image1.jpg');
 const image2 = require('../../assets/images/image2.jpeg');
 const image3 = require('../../assets/images/image3.jpg');
 const image4 = require('../../assets/images/image4.jpg');
 const coverImage = require('../../assets/images/coverImage.jpg');
 
-function DetailScreen({route}) {
-  const screenWidth = Dimensions.get('window').width;
+const DetailScreen: React.FC<Props> = ({route}) => {
+  const [favourite, setFavourite] = useState(false);
   const {item} = route.params;
-  const navigation = useNavigation();
-
+  const screenWidth = Dimensions.get('window').width;
+  const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
+  const navigateToCalendar = () => {
+    navigation.navigate('CalendarScreen');
+  };
   return (
     <View style={styles.container}>
-      
       <ScrollView style={{marginBottom: 100}}>
         <ImageBackground
           source={item.imageUrl}
           style={[styles.coverImage, {width: screenWidth}]}>
-          
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
             style={styles.gradient}>
@@ -88,35 +99,52 @@ function DetailScreen({route}) {
           <View style={styles.description}>
             <Text style={styles.descriptionHeading}>Reviews</Text>
             <Text style={styles.reviewText}>100 reviews</Text>
-            <ReviewCard />
-            <ReviewCard />
-            <ReviewCard />
+            <ReviewCard
+              name="Amber Heard"
+              text="Recommend for anyone looking for a comfort place."
+              title="Good Experience"
+              ratings={4.5}
+              date="12 June 2023"
+            />
+            <ReviewCard
+              name="Johnny Depp"
+              text="The room service was nice! Views are amazing! The price is reasonable for this stay."
+              title="Great Service"
+              ratings={3.5}
+              date="14 May 2023"
+            />
+            <ReviewCard
+              name="Kim Kardashian"
+              text="The host was welcoming, good place to stay."
+              title="Cool Place"
+              ratings={4}
+              date="22 April 2023"
+            />
           </View>
         </View>
       </ScrollView>
-      <View style={[{width: screenWidth, marginTop: 20}, styles.bottom]}>
-        <LinearGradient
-          colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.05)']}
-          style={[styles.shadowGradient, {width: screenWidth}]}
-        />
-        <View style={styles.bottomBar}>
-          <Text style={styles.priceText}>RM129/Room</Text>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Book Now</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <BottomBar>
+        <Text style={styles.priceText}>RM129/Room</Text>
+        <CustomButton text="Book Now" onPressFunction={navigateToCalendar} />
+      </BottomBar>
       <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => navigation.goBack()}>
-            <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.favouriteIcon} onPress={() => {}}>
-            <Icon name={'heart'} size={18} color="#776B5D" />
-          </TouchableOpacity>
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}>
+        <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
+      </TouchableOpacity>
+      <View style={styles.overlay}>
+        <TouchableOpacity onPress={() => setFavourite(prevState => !prevState)}>
+          <Icon
+            name={favourite ? 'heart' : 'heart-o'}
+            size={20}
+            color={PRIMARY}
+            style={styles.icon}
+          />
+        </TouchableOpacity>
+      </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -141,9 +169,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'transparent', // Initial overlay is transparent
-    justifyContent: 'flex-end', // Align content at the bottom
+    position: 'absolute',
+    top: 30,
+    left: 340,
+    width: 44,
+    height: 44,
+    borderRadius: 50,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+    elevation: 5,
+  },
+  icon: {
+    alignSelf: 'center',
   },
   gradient: {
     position: 'absolute',
@@ -158,7 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontFamily: 'Poppins-SemiBold',
     marginLeft: 30,
-    // You can adjust the position of text as per your design
   },
   cardReview: {
     fontFamily: 'Poppins-Regular',
@@ -189,7 +226,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    elevation: 5
+    elevation: 5,
   },
   favouriteIcon: {
     position: 'absolute',
@@ -201,7 +238,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
-    elevation: 5
+    elevation: 5,
   },
   features: {
     height: 45,
@@ -241,53 +278,18 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: PRIMARY,
   },
-  button: {
-    width: 175,
-    height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: PRIMARY,
-    borderRadius: 15,
-  },
-  buttonText: {
-    fontFamily: 'Poppins-Medium',
-    fontSize: 14,
-    color: 'white',
-  },
-  bottomBar: {
-    height: 52,
-    marginTop: 30,
-    marginLeft: 20,
-    justifyContent: 'space-between',
-    flexDirection: 'row',
-    alignItems: 'center',
-    width: '90%',
-  },
+
   priceText: {
     fontFamily: 'Poppins-SemiBold',
     color: PRIMARY,
     fontSize: 18,
   },
-  shadowGradient: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: 20,
-    zIndex: 0, // Ensure gradient is behind the content
-  },
-  bottom: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 92,
-  },
+
   reviewText: {
     marginTop: -15,
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: PRIMARY,
   },
-  
 });
 export default DetailScreen;
