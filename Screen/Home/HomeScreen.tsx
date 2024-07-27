@@ -32,15 +32,10 @@ const filterList: string[] = [
 ];
 
 const homestayList: Homestay[] = [
-  new Homestay(
-    'Koh Rong Samloem',
-    image1,
-    5,
-    'This place is great for people...',
-  ),
-  new Homestay('Another Place', image2, 4.5, 'Another description...'),
-  new Homestay('Another Place', image3, 4.5, 'Another description...'),
-  new Homestay('Another Place', image4, 4.5, 'Another description...'),
+  new Homestay('Koh Rong Samloem', 'Camping 1 night at chongkranroy', image1, 5, 'This place is great for people...'),
+  new Homestay('Another Place', '2 day 1 night Siem Reap', image2, 4.5, 'Another description...'),
+  new Homestay('Another Place', '2 day Bangkok, Thailand', image3, 4.5, 'Another description...'),
+  new Homestay('Another Place', 'Camping 2 day at chongkranroy', image4, 4.5, 'Another description...'),
 ];
 
 const HomeScreen: React.FC = () => {

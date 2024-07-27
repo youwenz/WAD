@@ -11,7 +11,7 @@ import { PRIMARY, SECONDARY } from './Screen/Style/Color';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import ProfileScreen from './Screen/Profile/ProfileScreen';
 import NotificationScreen from './Screen/Notification/NotificationScreen';
-import FavouriteScreen from './Screen/Favourite/FavouriteScreen';
+import WishListScreen from './Screen/WishList/WishListScreen';
 import CalendarScreen from './Screen/Home/CalendarScreen';
 import { RootStackParamList } from './Screen/Type/NavigationParamList';
 const MyTheme = {
@@ -52,7 +52,7 @@ function MainTabScreen() {
 
           if (route.name === 'Home') {
             iconName = 'home';
-          } else if (route.name === 'Favourite') {
+          } else if (route.name === 'WishList') {
             iconName = 'heart';
           } else if (route.name === 'Notification') {
             iconName = 'bell';
@@ -85,13 +85,13 @@ function MainTabScreen() {
       <Tab.Screen name="Home" component={HomeScreen} options={{
             headerShown: false,
           }}/>
-      <Tab.Screen name="Favourite" component={FavouriteScreen} options={{
+      <Tab.Screen name="WishList" component={WishListScreen} options={{
             headerShown: false,
           }}/>
-      <Tab.Screen name="Notification" component={ProfileScreen} options={{
+      <Tab.Screen name="Notification" component={NotificationScreen} options={{
             headerShown: false,
           }}/>
-      <Tab.Screen name="Profile" component={NotificationScreen} options={{
+      <Tab.Screen name="Profile" component={ProfileScreen} options={{
             headerShown: false,
           }}/>
     </Tab.Navigator>
