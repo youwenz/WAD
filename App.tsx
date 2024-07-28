@@ -14,6 +14,11 @@ import NotificationScreen from './Screen/Notification/NotificationScreen';
 import FavouriteScreen from './Screen/Favourite/FavouriteScreen';
 import CalendarScreen from './Screen/Home/CalendarScreen';
 import { RootStackParamList } from './Screen/Type/NavigationParamList';
+import BookingDetailsScreen from './Screen/BookingDetails/BookingDetailsScreen';
+import PaymentMethodScreen from './Screen/Payment/PaymentMethodScreen';
+import CreditDebitCardScreen from './Screen/Payment/CreditDebitCardScreen';
+import TngoScreen from './Screen/Payment/TngoScreen';
+import { ScreenStack } from 'react-native-screens';
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -37,6 +42,23 @@ export default function App() {
             headerShown: true,
             title: 'Available date'
           }}/>
+          <Stack.Screen name="BookingDetailsScreen" component={BookingDetailsScreen} options={{
+            headerShown: true,
+            title:'Booking Details'
+          }}
+            />
+          <Stack.Screen name="PaymentMethodScreen" component={PaymentMethodScreen} options={{
+            headerShown: true,
+            title: 'Payment Method',
+          }} />
+            <Stack.Screen name="CreditDebitCardScreen" component={CreditDebitCardScreen} options={{
+            headerShown: true,
+            title: 'Credit/Debit Card Payment',
+          }} />
+          <Stack.Screen name="TngoScreen" component={TngoScreen} options={{
+            headerShown: true,
+            title: 'Touch \'n Go Payment',
+          }} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

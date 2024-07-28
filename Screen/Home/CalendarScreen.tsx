@@ -1,4 +1,3 @@
-// CalendarScreen.tsx
 import React, {useState} from 'react';
 import {
   View,
@@ -36,11 +35,15 @@ const CalendarScreen: React.FC = () => {
       // Handle the booking logic here
       console.log('Start Date:', selectedStartDate);
       console.log('End Date:', selectedEndDate);
-      navigation.goBack();
+
+      // Navigate to BookingDetailsScreen without displaying the dates
+      navigation.navigate('BookingDetailsScreen');
+
     } else {
       Alert.alert('Please select both start and end dates.');
     }
   };
+
   const getMarkedDates = () => {
     const markedDates: {[key: string]: any} = {};
 
@@ -126,7 +129,8 @@ const CalendarScreen: React.FC = () => {
             navigation.goBack();
           }}
         />
-        <CustomButton text="Select Date" onPressFunction={() => {}} />
+        <CustomButton text="Select Date" onPressFunction={handleConfirm} />
+
       </BottomBar>
     </View>
   );

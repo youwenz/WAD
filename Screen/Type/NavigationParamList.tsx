@@ -6,7 +6,11 @@ import {RouteProp} from '@react-navigation/native';
 export type RootStackParamList = {
   Main: undefined;
   DetailScreen: DetailScreenParams;
-  CalendarScreen: undefined;
+  CalendarScreen: CalendarScreenParams;
+  BookingDetails:BookingDetailsParams;
+  PaymentMethodScreen: PaymentMethodScreenParams; 
+  CreditDebitCardScreen:CreditDebitCardScreenParams;
+  TngoScreen:TngoScreenParams;
 };
 
 // Create a type for stack navigation prop
@@ -39,8 +43,23 @@ export type MainTabRouteProp<T extends keyof MainTabParamList> = RouteProp<
 
 interface DetailScreenParams {
   item: Homestay;
+  title: string;
+  imageUrl: string;
 }
 
-interface CalendarScreenParams {}
+interface CalendarScreenParams {
+  title: string;
+  imageUrl: string;
+}
 
 interface HomescreenParams {}
+
+interface BookingDetailsParams {  
+  title: string;
+  imageUrl: string;
+}
+
+interface PaymentMethodScreenParams {
+  title: string;
+  imageUrl: string;
+}
