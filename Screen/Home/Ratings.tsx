@@ -1,54 +1,47 @@
-import {
-    Text,
-    View,
-    StyleSheet
-  } from 'react-native';
-  import Icon from 'react-native-vector-icons/FontAwesome';
-  import {PRIMARY, SECONDARY} from '../Style/Color';
+// Ratings.tsx
+import React from 'react';
+import { Text, View, StyleSheet, TextStyle } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
-  interface props{
-    star: number,
-    text: string
-  }
-  const Ratings:React.FC<props> = ({star, text}) => {
-    const renderStars = () => {
-        const stars = [];
-        for (let i = 1; i <= 5; i++) {
-          if (i <= star) {
-            stars.push(<Icon key={i} name="star" size={15} color="#FFB23F" />);
-          } else if (i - 0.5 === star) {
-            stars.push(<Icon key={i} name="star-half-full" size={15} color="#FFB23F" />);
-          } else {
-            stars.push(<Icon key={i} name="star-o" size={15} color="#FFB23F" />);
-          }
+interface RatingsProps {
+  star: number; // Rating value (e.g., 3.7)
+  text: string;
+  textStyle?: TextStyle;
+}
+
+const Ratings: React.FC<RatingsProps> = ({ star, text, textStyle }) => {
+  // Calculate the number of full stars and whether a half star is needed
+  const fullStars = Math.floor(star);
+  const hasHalfStar = star % 1 >= 0.5;
+  const totalStars = 5; // Total number of stars to display
+
+  return (
+    <View style={styles.container}>
+      {Array.from({ length: totalStars }).map((_, index) => {
+        if (index < fullStars) {
+          return <Icon key={index} name="star" size={17} color="#FFB23F" />;
+        } else if (index === fullStars && hasHalfStar) {
+          return <Icon key={index} name="star-half-o" size={17} color="#FFB23F" />;
+        } else {
+          return <Icon key={index} name="star-o" size={17} color="#FFB23F" />;
         }
-        return stars;
-      };
-
-    return (
-       <View style={styles.review}>
-      <View style={styles.ratings}>{renderStars()}</View>
-      <Text style={styles.cardReview}>{text}</Text>
+      })}
+      <Text style={[styles.text, textStyle]}>{text}</Text>
     </View>
-    );
-    }
+  );
+};
 
 const styles = StyleSheet.create({
-      cardReview: {
-        fontFamily: 'Poppins-Regular',
-        fontSize: 10,
-        color: PRIMARY,
-        marginLeft: 6,
-      },
-      review: {
-        flexDirection: 'row',
-        marginTop: 3,
-      },
-      ratings: {
-        flexDirection: 'row',
-        width: 85,
-        height: 15,
-        justifyContent: 'space-around',
-      },
-})
+  container: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  text: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 14,
+    color: '#FFB23F',
+    marginLeft: 6,
+  },
+});
+
 export default Ratings;

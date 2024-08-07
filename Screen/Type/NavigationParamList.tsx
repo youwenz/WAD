@@ -1,4 +1,4 @@
-import Homestay from '../Homestay';
+import Homestay from '../../models/Homestay';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 

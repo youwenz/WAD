@@ -3,7 +3,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import WishListCard from './WishListCard';
-import Homestay from '../Homestay';
+import Homestay from '../../models/Homestay';
 import { PRIMARY, SECONDARY } from '../Style/Color';
 
 const image1 = require('../../assets/images/image1.jpg');

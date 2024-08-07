@@ -15,8 +15,10 @@ interface props {
   title: string;
   description: string;
   imageUrl: ImageSourcePropType;
+  ratings: number;
+  price: number
 }
-const TravelCard: React.FC<props> = ({title, description, imageUrl}) => {
+const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, price}) => {
   const [favourite, setFavourite] = useState(false);
   return (
     <View style={styles.cardBackground}>
@@ -38,8 +40,8 @@ const TravelCard: React.FC<props> = ({title, description, imageUrl}) => {
         </View>
       </View>
       <Text style={styles.cardTitle}>{title}</Text>
-      <Ratings star={4.5} text="98 reviews"/>
-      <Text style={styles.description}>{description}</Text>
+      <Ratings star={ratings} text={`${ratings} Ratings`} textStyle={styles.ratingText}/>
+      <Text style={styles.description}>RM {price}/night</Text>
     </View>
   );
 };
@@ -89,8 +91,11 @@ const styles = StyleSheet.create({
   description: {
     fontFamily: 'Poppins-Regular',
     color: PRIMARY,
-    fontSize: 12,
+    fontSize: 14,
     marginTop: 3,
   },
+  ratingText:{
+    color: PRIMARY
+  }
 });
 export default TravelCard;

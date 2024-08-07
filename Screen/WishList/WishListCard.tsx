@@ -3,14 +3,10 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } 
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { PRIMARY, SECONDARY } from '../Style/Color';
 import Ratings from '../Home/Ratings';
-import Homestay from '../Homestay';
+import Homestay from '../../models/Homestay';
 
 interface Props {
   homestay: Homestay;
-  onPress: () => void;
-}
-interface Props {
-  ratings: Ratings;
   onPress: () => void;
 }
 
@@ -22,7 +18,7 @@ const WishListCard: React.FC<Props> = ({ homestay, onPress }) => {
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{homestay.title}</Text>
         <View style={styles.rate}>
-          <Ratings star={homestay.ratings} text={`${homestay.ratings} reviews`}/>
+          <Ratings star={homestay.ratings} textStyle={styles.ratingText} text={`100 reviews`}/>
         </View>
         <Text style={styles.subTitle}>{homestay.subTitle}</Text>
         <View style={styles.priceContainer}>
@@ -54,36 +50,36 @@ const styles = StyleSheet.create({
   title:{
     fontSize: 15,
     fontFamily: 'Poppins-SemiBold',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   subTitle: {
     fontSize: 12,
     fontFamily: 'Poppins',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   rate: {
     fontSize: 12,
     fontFamily: 'Poppins',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   priceContainer: {
     flexDirection: 'row',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   price: {
     fontSize: 12,
     fontFamily: 'Poppins-SemiBold',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   person: {
     fontSize: 12,
     fontFamily: 'Poppins',
-    color: 'PRIMARY',
+    color: PRIMARY,
   },
   day: {
     fontSize: 13,
     fontFamily: 'Poppins',
-    color: 'PRIMARY',
+    color: PRIMARY,
     alignSelf: 'flex-start',
     borderWidth: 1,
     borderColor: '#ccc',
@@ -91,6 +87,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
   },
+  ratingText:{
+    color: PRIMARY
+  }
 });
 
 export default WishListCard;
