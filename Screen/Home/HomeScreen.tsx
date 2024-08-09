@@ -15,7 +15,7 @@ import TravelCard from './TravelCard';
 import Homestay from '../../models/Homestay';
 import {PRIMARY, SECONDARY} from '../Style/Color';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import initialHomestayList from '../../models/HomeStayLIst';
+import initialHomestayList from '../../models/HomeStayList';
 
 const coverImage = require('../../assets/images/coverImage.webp');
 
@@ -38,6 +38,7 @@ const shuffleArray = (array: any[]) => {
 };
 
 const HomeScreen: React.FC = () => {
+  const [searchText, setSearchText] = useState('');
   const navigation = useNavigation();
   const [filterList, setFilterList] = useState<string[]>(initialFilterList);
   const [selectedFilter, setSelectedFilter] = useState('');
@@ -48,6 +49,7 @@ const HomeScreen: React.FC = () => {
   const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>();
 
   const handleSearch = (text: string) => {
+    setSearchText(text);
     if (text.length > 0) {
       const filtered = initialHomestayList.filter(homestay =>
         homestay.title.toLowerCase().includes(text.toLowerCase()),
@@ -106,11 +108,17 @@ const HomeScreen: React.FC = () => {
             placeholder="Search destination"
             placeholderTextColor="#A9A9A9"
             onChangeText={handleSearch}
+            
           />
           <Icon name="search" size={20} color="#A9A9A9" style={styles.icon} />
         </View>
         {isSearched && (
           <View>
+          <Text style={styles.heading}>
+                {filteredHomestays && filteredHomestays.length === 0
+                  ? 'No homestay found'
+                  : `Showing search result for '${searchText}'`}
+              </Text>
             <FlatList
               data={filteredHomestays}
               horizontal={true}

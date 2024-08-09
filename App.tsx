@@ -18,7 +18,7 @@ import BookingDetailsScreen from './Screen/BookingDetails/BookingDetailsScreen';
 import PaymentMethodScreen from './Screen/Payment/PaymentMethodScreen';
 import CreditDebitCardScreen from './Screen/Payment/CreditDebitCardScreen';
 import TngoScreen from './Screen/Payment/TngoScreen';
-import { ScreenStack } from 'react-native-screens';
+
 const MyTheme = {
   ...DefaultTheme,
   colors: {
