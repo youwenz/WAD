@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { PRIMARY, SECONDARY } from '../Style/Color';
+import { PRIMARY } from '../Style/Color';
 import Ratings from '../Home/Ratings';
 import Homestay from '../../models/Homestay';
+
 
 interface Props {
   homestay: Homestay;
@@ -17,12 +17,12 @@ const WishListCard: React.FC<Props> = ({ homestay, onPress }) => {
       <Image style={styles.image} source={homestay.imageUrl} />
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{homestay.title}</Text>
-        <View style={styles.rate}>
+        <View>
           <Ratings star={homestay.ratings} textStyle={styles.ratingText} text={`100 reviews`}/>
         </View>
-        <Text style={styles.subTitle}>{homestay.subTitle}</Text>
+        <Text style={styles.subTitle}>{homestay.city}</Text>
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>from $100</Text>
+          <Text style={styles.price}>from ${homestay.price}</Text>
           <Text style={styles.person}>/person</Text>
         </View>
         <Text style={styles.day}>2 day 1 night</Text>
@@ -53,11 +53,6 @@ const styles = StyleSheet.create({
     color: PRIMARY,
   },
   subTitle: {
-    fontSize: 12,
-    fontFamily: 'Poppins',
-    color: PRIMARY,
-  },
-  rate: {
     fontSize: 12,
     fontFamily: 'Poppins',
     color: PRIMARY,

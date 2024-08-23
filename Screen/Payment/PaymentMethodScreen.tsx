@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import BottomBar from '../Home/BottomBar';
 import { PRIMARY } from '../Style/Color';
+import Notification from '../Notification/Notification';
 
 const PAYMENT_METHODS = [
   {

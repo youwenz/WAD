@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Text,
   View,
-  FlatList,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -22,16 +21,32 @@ import { RootStackParamList, RootStackNavigationProp } from '../Type/NavigationP
 import CustomButton from './CustomButton';
 import { RouteProp } from '@react-navigation/native';
 import Ratings from './Ratings';
+import { useFavourites } from '../WishList/FavouriteContext';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
 };
 
 const DetailScreen: React.FC<Props> = ({ route }) => {
-  const [favourite, setFavourite] = useState(false);
   const { item } = route.params;
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
+
+  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
+  const [favourite, setFavourite] = useState(false);
+
+  useEffect(() => {
+    setFavourite(isFavourite(item.listing_id));
+  }, [item.listing_id, isFavourite]);
+  
+  const toggleFavourite = () => {
+    if (favourite) {
+      removeFavourite(item.listing_id);
+    } else {
+      addFavourite(item);
+    }
+    setFavourite(!favourite);
+  };
 
   const navigateToCalendar = () => {
     navigation.navigate('CalendarScreen');
@@ -127,7 +142,7 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
         <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
       </TouchableOpacity>
       <View style={styles.overlay}>
-        <TouchableOpacity onPress={() => setFavourite(prevState => !prevState)}>
+        <TouchableOpacity onPress={toggleFavourite}>
           <Icon
             name={favourite ? 'heart' : 'heart-o'}
             size={20}

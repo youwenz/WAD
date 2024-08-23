@@ -130,6 +130,7 @@ const HomeScreen: React.FC = () => {
                     imageUrl={item.imageUrl}
                     price={item.price}
                     ratings={item.ratings}
+                    listing_id={item.listing_id}
                   />
                 </TouchableOpacity>
               )}
@@ -191,6 +192,7 @@ const HomeScreen: React.FC = () => {
                     imageUrl={item.imageUrl}
                     price={item.price}
                     ratings={item.ratings}
+                    listing_id={item.listing_id}
                   />
                 </TouchableOpacity>
               )}
@@ -210,6 +212,7 @@ const HomeScreen: React.FC = () => {
                     imageUrl={item.imageUrl}
                     price={item.price}
                     ratings={item.ratings}
+                    listing_id={item.listing_id}
                   />
                 </TouchableOpacity>
               )}

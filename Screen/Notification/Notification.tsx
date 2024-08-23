@@ -1,4 +1,4 @@
-class Homestay {
+class Notification {
     title: string;
     description: string;
     day: string;
@@ -12,4 +12,4 @@ class Homestay {
     }
 }
 
-export default Homestay;
+export default Notification;

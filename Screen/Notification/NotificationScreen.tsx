@@ -1,49 +1,43 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import Notification from './Notification';
 import NotificationCard from './NotificationCard';
-import { PRIMARY, SECONDARY } from '../Style/Color';
+import { PRIMARY } from '../Style/Color';
 
 const image1 = require('../../assets/images/image1.jpg');
 const image2 = require('../../assets/images/image2.jpeg');
 const image3 = require('../../assets/images/image3.jpg');
 
-const notificationList: Notification[] = [
-  new Notification('New Recommended place', 'Just for you', '1 day ago', image1),
-  new Notification('Your Booking Success', 'You have been accepted...', '1 day ago', image2),
-  new Notification('Get an unlimited traveling', 'Received summer spe..', '2 day ago', image3),
-];
-
-const NotificationScreen: React.FC = () => {
-  const navigation = useNavigation();
-
-  const navigateToDetail = (item: Notification) => {
-    navigation.navigate('DetailScreen', { item });
-  };
+const NotificationListScreen: React.FC = () => {
+  // State for notifications
+  const [notifications] = useState<Notification[]>([
+    new Notification('New Recommended place', 'Just for you', '1 day ago', image1),
+    new Notification('Your Booking Success', 'You have been accepted...', '1 day ago', image2),
+    new Notification('Get an unlimited traveling', 'Received summer spe..', '2 days ago', image3),
+  ]);
 
   const renderItem = ({ item }: { item: Notification }) => (
-    <NotificationCard notification={item} onPress={() => navigateToDetail(item)} />
+    <NotificationCard notification={item} />
   );
 
   return (
-    <View style={styles.backgroundContainer}>
-      <Text style={styles.title}>Notification</Text>
-      <Text style={styles.subTitle}>Today</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Notifications</Text>
       <FlatList
-        data={notificationList}
+        data={notifications}
         keyExtractor={(item) => item.title}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.listContainer}
       />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  backgroundContainer: {
+  container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     padding: 10,
   },
   title: {
@@ -52,13 +46,11 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     padding: 10,
     paddingTop: 70,
+    textAlign: 'left', 
   },
-  subTitle: {
-    fontSize: 18,
-    color: PRIMARY,
-    fontFamily: 'Poppins-SemiBold',
-    margin: 10,
+  listContainer: {
+    paddingBottom: 20, 
   },
 });
 
-export default NotificationScreen;
+export default NotificationListScreen;

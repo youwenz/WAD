@@ -2,13 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Profile from './Profile';
-import { PRIMARY, SECONDARY } from '../Style/Color';
+import { PRIMARY } from '../Style/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 const profile1 = require('../../assets/images/profile1.jpg');
 
 const profileList: Profile[] = [
-  new Profile('Seung Ju', 'Korea, Solar System', profile1, '360', '238', '473'),
+  new Profile('Seung Ju', 'Korea, Solar System', profile1, '360', '238', '473', 1),
 ];
 
 const ProfileScreen: React.FC = () => {
@@ -46,25 +46,25 @@ const ProfileScreen: React.FC = () => {
         <View style={styles.accountSettingInnerContainer}>
           <Icon name="person-circle" size={20} color='#776B5D' />
           <Text style={styles.accountSettingSubTitle}>Edit profile</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity>
             <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
           </TouchableOpacity>
         </View>
         <View style={styles.accountSettingInnerContainer}>
           <Icon name="language" size={20} color='#776B5D' />
           <Text style={styles.accountSettingSubTitle}>Change language</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity>
             <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
           </TouchableOpacity>
         </View>
         <View style={styles.accountSettingInnerContainer}>
           <Icon name="moon" size={20} color='#776B5D' />
           <Text style={styles.accountSettingSubTitle}>Color mode</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
+          <TouchableOpacity>
             <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
           </TouchableOpacity>
         </View>
-        <Text style={styles.profileTitle}>Derleng Legal</Text>
+        <Text style={styles.profileTitle}>Legal</Text>
         <View style={styles.accountSettingInnerContainer}>
           <Icon name="document-text" size={20} color='#776B5D' />
           <Text style={styles.accountSettingSubTitle}>Terms and Condition</Text>

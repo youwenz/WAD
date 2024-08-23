@@ -18,6 +18,7 @@ import BookingDetailsScreen from './Screen/BookingDetails/BookingDetailsScreen';
 import PaymentMethodScreen from './Screen/Payment/PaymentMethodScreen';
 import CreditDebitCardScreen from './Screen/Payment/CreditDebitCardScreen';
 import TngoScreen from './Screen/Payment/TngoScreen';
+import { FavouritesProvider } from './Screen/WishList/FavouriteContext'
 
 const MyTheme = {
   ...DefaultTheme,
@@ -33,6 +34,7 @@ const Stack = createStackNavigator<RootStackParamList>();
 export default function App() {
   return (
     <SafeAreaProvider>
+      <FavouritesProvider>
       <NavigationContainer theme={MyTheme}>
         <StatusBar translucent backgroundColor="transparent" />
         <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -61,6 +63,7 @@ export default function App() {
           }} />
         </Stack.Navigator>
       </NavigationContainer>
+      </FavouritesProvider>
     </SafeAreaProvider>
   );
 }

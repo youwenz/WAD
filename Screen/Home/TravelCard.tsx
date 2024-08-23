@@ -11,15 +11,29 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {PRIMARY, SECONDARY} from '../Style/Color';
 import Ratings from './Ratings';
+import { useFavourites } from '../WishList/FavouriteContext';
+
 interface props {
   title: string;
   description: string;
   imageUrl: ImageSourcePropType;
   ratings: number;
-  price: number
+  price: number;
+  listing_id: number;
 }
-const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, price}) => {
-  const [favourite, setFavourite] = useState(false);
+
+const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, price, listing_id }) => {
+  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
+  const favourite = isFavourite(listing_id);
+  
+  const toggleFavourite = () => {
+    if (favourite) {
+      removeFavourite(listing_id);
+    } else {
+      addFavourite({ title, description, imageUrl, ratings, price, listing_id });
+    }
+  }
+
   return (
     <View style={styles.cardBackground}>
       <View style={styles.cardImage}>
@@ -29,7 +43,7 @@ const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, pri
           style={styles.image}></Image>
         <View style={styles.overlay}>
           <TouchableOpacity
-            onPress={() => setFavourite(prevState => !prevState)}>
+            onPress={toggleFavourite}>
             <Icon
               name={favourite ? 'heart' : 'heart-o'}
               size={20}
