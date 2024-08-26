@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { ScrollView, View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { PRIMARY } from '../Style/Color';
 import { StackNavigationProp } from '@react-navigation/stack';
-import CustomButton from './CustomButton';
+import CustomButton from '../Home/CustomButton';
 import { LogBox } from 'react-native';
-import {getDBConnection, createTableUsers, createUsers} from '../database';
+import {getDBConnection, createTableUsers, createUsers} from './database';
 import  validation  from './Validation';
 
 LogBox.ignoreLogs([
@@ -34,7 +34,16 @@ const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({ navigation })
       return;
     }else{
       await createUsers(await getDBConnection(),fullName,email,password,age,phone);
-      navigation.goBack();
+      Alert.alert(
+        'Account Created!',
+        'Your account has been successfully created. Please log in.',
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.navigate('Login'), // Navigate to Login screen after dismissing the alert
+          },
+        ]
+      );
     }
   }
 
@@ -44,7 +53,7 @@ const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({ navigation })
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.heading}>Get the best out of derleng by creating an account</Text>
+      <Text style={styles.heading}>Create an account</Text>
 
       <Text style={styles.label}>First Name</Text>
       <TextInput
@@ -94,6 +103,7 @@ const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({ navigation })
         <CustomButton 
           text="Create Account"
           onPressFunction={_insert}
+          width= {323}
         />
       </View>
 
@@ -110,18 +120,21 @@ const CreateAccountScreen: React.FC<CreateAccountScreenProps> = ({ navigation })
 const styles = StyleSheet.create({
   container: {
     padding: 20,
+    backgroundColor: 'white',
+    alignItems: 'center'
   },
   heading: {
-    fontFamily: 'Poppins',
-    fontSize: 12,
-    padding: 12,
+    fontFamily: 'Poppins-SemiBold',
+    fontSize: 24,
+    padding: 10,
     textAlign: 'center',
   },
   label: {
-    fontFamily: 'Poppins',
-    fontSize: 10,
-    marginBottom: 10,
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+    marginBottom: 5,
     alignSelf: 'flex-start',
+    marginLeft: 15
   },
   input: {
     height: 52,
@@ -129,11 +142,12 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     paddingTop: 10,
     paddingBottom: 10,
-    marginBottom: 15,
-    borderColor: PRIMARY,
+    marginBottom: 25,
+    borderColor: '#dddddd',
     borderWidth: 1,
     color: PRIMARY,
-    backgroundColor: 'white', 
+    backgroundColor: 'white',
+    width: 350
   },
   button: {
     alignItems: 'center',
@@ -146,13 +160,13 @@ const styles = StyleSheet.create({
   },
   message: {
     fontFamily: 'Poppins-Mixed',
-    fontSize: 10,
+    fontSize: 16,
     color: PRIMARY,
   },
   back: {
     fontFamily: 'Poppins-Mixed',
     fontWeight: 'bold',
-    fontSize: 10,
+    fontSize: 16,
     color: PRIMARY,
   }
 });

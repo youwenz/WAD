@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import { PRIMARY } from '../Style/Color';
-import CustomButton from './CustomButton';
+import CustomButton from '../Home/CustomButton';
 import { StackNavigationProp } from '@react-navigation/stack';
-import { getDBConnection, updateUser} from '../database';
+import { getDBConnection, updateUser} from './database';
 import validatePassword from './Validation';
 
 type ChangePasswordScreenProps = {

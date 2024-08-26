@@ -11,6 +11,7 @@ export type RootStackParamList = {
   PaymentMethodScreen: PaymentMethodScreenParams; 
   CreditDebitCardScreen:CreditDebitCardScreenParams;
   TngoScreen:TngoScreenParams;
+  ChatScreen: undefined;
 };
 
 // Create a type for stack navigation prop

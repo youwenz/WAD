@@ -3,6 +3,7 @@ import { Text, View, StyleSheet, Image } from 'react-native';
 import Notification from './Notification';
 import { PRIMARY } from '../Style/Color';
 
+
 interface Props {
   notification: Notification;
 }

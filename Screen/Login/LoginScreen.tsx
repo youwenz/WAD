@@ -3,14 +3,15 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } fro
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { PRIMARY } from '../Style/Color';
-import CustomButton from './CustomButton';
-import { getDBConnection, getUsersByEmail } from '../database';
+import CustomButton from '../Home/CustomButton';
+import { getDBConnection, getUsersByEmail } from './database';
 
 type LoginScreenProps = {
   navigation: StackNavigationProp<any, 'Login'>; 
+  onLoginSuccess: () => void;
 };
 
-const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+const LoginScreen: React.FC<LoginScreenProps> = ({ navigation, onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -20,7 +21,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     if(user){
       if (user.password == password) {
         Alert.alert('Login Success', 'You have successfully logged in!');
-        navigation.navigate('Home');
+        onLoginSuccess();
       } else {
         Alert.alert('Login Failed', 'Incorrect password.');
       }
@@ -65,6 +66,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
         <CustomButton
           text="Login"
           onPressFunction={handleLogin}
+          width = {323}
         />
       </View>
 
@@ -76,13 +78,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
       <View style={styles.socialButtonsContainer}>
         <TouchableOpacity onPress={() => {/* Handle Facebook login */}}>
-          <Image source={require('../images/facebook.png')} style={styles.image} />
+          <Image source={require('../../assets/images/facebook.png')} style={styles.image} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {/* Handle Google login */}}>
-          <Image source={require('../images/google.jpg')} style={styles.image} />
+          <Image source={require('../../assets/images/google.jpg')} style={styles.image} />
         </TouchableOpacity>
         <TouchableOpacity onPress={() => {/* Handle Apple login */}}>
-          <Image source={require('../images/apple.webp')} style={styles.image} />
+          <Image source={require('../../assets/images/apple.webp')} style={styles.image} />
         </TouchableOpacity>
       </View>
 
@@ -114,27 +116,27 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   subHeading: {
-    width: 230,
+    width: 280,
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 16,
     textAlign: 'center',
     marginBottom: 20,
   },
   label: {
     fontFamily: 'Poppins',
-    fontSize: 12,
-    marginBottom: 5,
+    fontSize: 16,
+    marginBottom: 8,
   },
   input: {
     width: '100%',
     height: 52,
-    marginVertical: 10,
     padding: 10,
     borderRadius: 15,
     borderWidth: 1,
     borderColor: PRIMARY,
     fontFamily: 'Poppins',
     backgroundColor: 'white',
+    marginBottom: 20
   },
   button: {
     alignItems: 'center',
@@ -142,13 +144,13 @@ const styles = StyleSheet.create({
   },
   message: {
     fontFamily: 'Poppins',
-    fontSize: 10,
+    fontSize: 16,
     color: PRIMARY,
     textAlign: 'center',
   },
   createAccountText: {
     fontFamily: 'Poppins-Medium',
-    fontSize: 10,
+    fontSize: 16,
     color: PRIMARY,
     textAlign: 'center',
     marginLeft: 5,
@@ -156,7 +158,7 @@ const styles = StyleSheet.create({
   },
   forgotPasswordText: {
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 14,
     color: PRIMARY,
     textDecorationLine: 'underline',
     textAlign: 'right',
@@ -174,7 +176,7 @@ const styles = StyleSheet.create({
   },
   orText: {
     fontFamily: 'Poppins',
-    fontSize: 12,
+    fontSize: 16,
     color: PRIMARY,
     marginHorizontal: 10,
   },
