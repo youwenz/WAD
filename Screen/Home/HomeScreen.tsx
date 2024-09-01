@@ -1,4 +1,4 @@
-import React, {useState, useRef, useEffect} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -10,12 +10,12 @@ import {
   ScrollView,
   Animated,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import TravelCard from './TravelCard';
 import Homestay from '../../models/Homestay';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import { PRIMARY, SECONDARY } from '../Style/Color';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import initialHomestayList from '../../models/HomeStayList';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const coverImage = require('../../assets/images/coverImage.webp');
 
@@ -43,27 +43,41 @@ const HomeScreen: React.FC = () => {
   const [filterList, setFilterList] = useState<string[]>(initialFilterList);
   const [selectedFilter, setSelectedFilter] = useState('');
   const [isSearched, setSearched] = useState(false);
-  const [homestayList, setHomestayList] = useState(() =>
-    shuffleArray(initialHomestayList),
-  );
-  const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>();
+  const [homestayList, setHomestayList] = useState<Homestay[]>([]);
+  const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>([]);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const [hotDeals, setHotDeals] = useState<Homestay[]>([]);
+  useEffect(() => {
+    const fetchHomestays = async () => {
+      try {
+        const storedHomestayList = await AsyncStorage.getItem('homestayList');
+        if (storedHomestayList !== null) {
+          const homestays = JSON.parse(storedHomestayList);
+          setHotDeals(homestays);
+          setHomestayList(shuffleArray(homestays));
+          console.log('Homestay list retrieved successfully');
+        }
+      } catch (error) {
+        console.log('Error retrieving homestay list from AsyncStorage:', error);
+      }
+    };
+
+    fetchHomestays();
+  }, []); 
 
   const handleSearch = (text: string) => {
     setSearchText(text);
     if (text.length > 0) {
-      const filtered = initialHomestayList.filter(homestay =>
+      const filtered = homestayList.filter(homestay =>
         homestay.title.toLowerCase().includes(text.toLowerCase()),
       );
       setFilteredHomestays(filtered);
-      setSearched(true); // Set searched to true whenever there is text in the search bar
+      setSearched(true); 
     } else {
       setFilteredHomestays([]);
-      setSearched(false); // Reset search state when the search bar is cleared
+      setSearched(false); 
     }
   };
-
-  // Animated value for FlatList
-  const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     // Animate the filter list when the selected filter changes
@@ -78,18 +92,17 @@ const HomeScreen: React.FC = () => {
   }, [filterList]);
 
   const navigateToDetail = (item: Homestay) => {
-    navigation.navigate('DetailScreen', {item});
+    navigation.navigate('DetailScreen', { item });
   };
 
   const handleFilterPress = (filter: string) => {
     const updatedFilterList = filterList.filter(f => f !== filter);
-    updatedFilterList.unshift(filter); // Move selected filter to the start
+    updatedFilterList.unshift(filter); 
     setFilterList(updatedFilterList);
     setSelectedFilter(filter === selectedFilter ? '' : filter);
 
-    // Shuffle homestayList when a filter is selected
     const shuffledList = shuffleArray(homestayList);
-    setHomestayList(shuffledList); // Update state with shuffled list
+    setHomestayList(shuffledList); 
   };
 
   const translateX = animatedValue.interpolate({
@@ -108,21 +121,20 @@ const HomeScreen: React.FC = () => {
             placeholder="Search destination"
             placeholderTextColor="#A9A9A9"
             onChangeText={handleSearch}
-            
           />
           <Icon name="search" size={20} color="#A9A9A9" style={styles.icon} />
         </View>
         {isSearched && (
           <View>
-          <Text style={styles.heading}>
-                {filteredHomestays && filteredHomestays.length === 0
-                  ? 'No homestay found'
-                  : `Showing search result for '${searchText}'`}
-              </Text>
+            <Text style={styles.heading}>
+              {filteredHomestays.length === 0
+                ? 'No homestay found'
+                : `Showing search result for '${searchText}'`}
+            </Text>
             <FlatList
               data={filteredHomestays}
               horizontal={true}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigateToDetail(item)}>
                   <TravelCard
                     title={item.title}
@@ -146,7 +158,7 @@ const HomeScreen: React.FC = () => {
                 data={filterList}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-                renderItem={({item}) => (
+                renderItem={({ item }) => (
                   <TouchableOpacity onPress={() => handleFilterPress(item)}>
                     <Animated.View
                       style={[
@@ -154,14 +166,16 @@ const HomeScreen: React.FC = () => {
                         {
                           backgroundColor:
                             item === selectedFilter ? PRIMARY : 'white',
-                          transform: [{translateX}],
+                          transform: [{ translateX }],
                         },
-                      ]}>
+                      ]}
+                    >
                       <Text
                         style={[
                           styles.filterText,
-                          {color: item === selectedFilter ? 'white' : PRIMARY},
-                        ]}>
+                          { color: item === selectedFilter ? 'white' : PRIMARY },
+                        ]}
+                      >
                         {item}
                       </Text>
                     </Animated.View>
@@ -171,9 +185,10 @@ const HomeScreen: React.FC = () => {
               />
             </View>
             <View
-              style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
               <Text style={styles.heading}>
-                {selectedFilter == ''
+                {selectedFilter === ''
                   ? 'Featured Places'
                   : `${selectedFilter} Places`}
               </Text>
@@ -184,7 +199,7 @@ const HomeScreen: React.FC = () => {
               horizontal={true}
               style={styles.list}
               showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigateToDetail(item)}>
                   <TravelCard
                     title={item.title}
@@ -198,13 +213,13 @@ const HomeScreen: React.FC = () => {
               )}
               keyExtractor={item => item.listing_id.toString()}
             />
-            <Text style={[styles.heading, {marginTop: 20}]}>Hot Deals</Text>
+            <Text style={[styles.heading, { marginTop: 20 }]}>Hot Deals</Text>
             <FlatList
-              data={initialHomestayList}
+              data={hotDeals}
               horizontal={true}
               style={styles.list}
               showsHorizontalScrollIndicator={false}
-              renderItem={({item}) => (
+              renderItem={({ item }) => (
                 <TouchableOpacity onPress={() => navigateToDetail(item)}>
                   <TravelCard
                     title={item.title}

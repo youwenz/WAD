@@ -20,7 +20,7 @@ import CreditDebitCardScreen from '../Screen/Payment/CreditDebitCardScreen';
 import TngoScreen from '../Screen/Payment/TngoScreen';
 import {FavouritesProvider} from '../Screen/WishList/FavouriteContext';
 import ChatScreen from '../Screen/Notification/ChatScreen';
-
+import {saveHomestayList} from '../models/AsyncStorage';
 const MyTheme = {
   ...DefaultTheme,
   colors: {
@@ -29,16 +29,26 @@ const MyTheme = {
   },
 };
 
+interface ScreenProps {
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
+
+const MainTabScreenWrapper: React.FC<{ setIsLoggedIn: (isLoggedIn: boolean) => void }> = (props) => {
+  return <MainTabScreen {...props} />;
+};
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator<RootStackParamList>();
 
-export default function App() {
+const App: React.FC<ScreenProps> = ({setIsLoggedIn}) => {
+  saveHomestayList();
   return (
     <SafeAreaProvider>
       <FavouritesProvider>
         <StatusBar translucent backgroundColor="transparent" />
         <Stack.Navigator screenOptions={{headerShown: false}}>
-          <Stack.Screen name="Main" component={MainTabScreen} />
+        <Stack.Screen name="Main">
+            {props => <MainTabScreenWrapper {...props} setIsLoggedIn={setIsLoggedIn} />}
+          </Stack.Screen>
           <Stack.Screen name="DetailScreen" component={DetailScreen} />
           <Stack.Screen
             name="CalendarScreen"
@@ -91,7 +101,7 @@ export default function App() {
   );
 }
 
-function MainTabScreen() {
+function MainTabScreen({setIsLoggedIn}: { setIsLoggedIn: (isLoggedIn: boolean) => void }) {
   return (
     <Tab.Navigator
       screenOptions={({route}) => ({
@@ -153,11 +163,13 @@ function MainTabScreen() {
       />
       <Tab.Screen
         name="Profile"
-        component={ProfileScreen}
         options={{
           headerShown: false,
-        }}
-      />
+        }}>
+        {props => <ProfileScreen {...props} setIsLoggedIn={setIsLoggedIn} />}
+      </Tab.Screen>
     </Tab.Navigator>
   );
 }
+
+export default App;

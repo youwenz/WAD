@@ -1,19 +1,19 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import AuthStack from './Screen/Login/App'; // Handles Onboarding, Login, Create Account
-import MainAppStack from './Screen/App'; // Handles Home, Main Screens, etc.
+import AuthStack from './Screen/Login/App';
+import MainAppStack from './Screen/App';
+import { navigationRef } from './Screen/NavigationService';
 
 const Stack = createStackNavigator();
 
 const App: React.FC = () => {
-  //set this state to true to bypass login page
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
+  const [isLoggedIn, setIsLoggedIn] = useState(true);
+
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       {isLoggedIn ? (
-        <MainAppStack />
+        <MainAppStack setIsLoggedIn={setIsLoggedIn}/>
       ) : (
         <AuthStack onLoginSuccess={() => setIsLoggedIn(true)} />
       )}

@@ -1,19 +1,17 @@
-// Ratings.tsx
 import React from 'react';
 import { Text, View, StyleSheet, TextStyle } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 interface RatingsProps {
-  star: number; // Rating value (e.g., 3.7)
+  star: number; 
   text: string;
   textStyle?: TextStyle;
 }
 
 const Ratings: React.FC<RatingsProps> = ({ star, text, textStyle }) => {
-  // Calculate the number of full stars and whether a half star is needed
   const fullStars = Math.floor(star);
   const hasHalfStar = star % 1 >= 0.5;
-  const totalStars = 5; // Total number of stars to display
+  const totalStars = 5; 
 
   return (
     <View style={styles.container}>
