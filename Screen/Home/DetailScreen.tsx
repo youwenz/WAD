@@ -22,6 +22,7 @@ import CustomButton from './CustomButton';
 import { RouteProp } from '@react-navigation/native';
 import Ratings from './Ratings';
 import { useFavourites } from '../WishList/FavouriteContext';
+import MapPreview  from './Location'
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
@@ -105,6 +106,7 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
              {item.address}
             </Text>
           </View>
+          <MapPreview homestayId={item.listing_id} />
           <View style={styles.description}>
             <Text style={styles.descriptionHeading}>Reviews</Text>
             <Text style={styles.reviewText}>100 reviews</Text>
