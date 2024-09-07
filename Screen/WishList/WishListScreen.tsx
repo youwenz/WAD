@@ -1,25 +1,15 @@
-// WishListScreen.tsx
 import React from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, StatusBar, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import WishListCard from './WishListCard';
-import Homestay from '../Homestay';
+import Homestay from '../../models/Homestay';
 import { PRIMARY, SECONDARY } from '../Style/Color';
-
-const image1 = require('../../assets/images/image1.jpg');
-const image2 = require('../../assets/images/image2.jpeg');
-const image3 = require('../../assets/images/image3.jpg');
-const image4 = require('../../assets/images/image4.jpg');
-
-const homestayList: Homestay[] = [
-  new Homestay('Koh Rong Samloem', 'Camping 1 night at chongkranroy', image1, 5, 'This place is great for people...'),
-  new Homestay('Another Place', '2 day 1 night Siem Reap', image2, 4.5, 'Another description...'),
-  new Homestay('Another Place', '2 day Bangkok, Thailand', image3, 4.5, 'Another description...'),
-  new Homestay('Another Place', 'Camping 2 day at chongkranroy', image4, 4.5, 'Another description...'),
-];
+import { useFavourites } from '../WishList/FavouriteContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const WishListScreen: React.FC = () => {
   const navigation = useNavigation();
+  const { favourites, clearFavourites } = useFavourites();
 
   const navigateToDetail = (item: Homestay) => {
     navigation.navigate('DetailScreen', { item });
@@ -33,22 +23,32 @@ const WishListScreen: React.FC = () => {
   );
 
   return (
-    <View style={styles.backgroundContainer}>
+    <SafeAreaView style={styles.backgroundContainer}>
+      <StatusBar barStyle='dark-content'/>
       <Text style={styles.title}>Wishlist</Text>
-      <FlatList
-        data={homestayList}
-        keyExtractor={(item) => item.title}
-        renderItem={renderItem}
-        showsVerticalScrollIndicator={false}
-      />
-    </View>
+      {favourites.length === 0 ? (
+        <Text style={styles.emptyMessage}>No items in your wishlist.</Text>
+      ) : (
+        <FlatList
+          data={favourites}
+          keyExtractor={(item) => item.listing_id ? item.listing_id.toString() : Math.random().toString()}
+          renderItem={renderItem}
+          showsVerticalScrollIndicator={false}
+          ListFooterComponent={
+            <TouchableOpacity style={styles.clearButton} onPress={clearFavourites}>
+              <Text style={styles.clearButtonText}>Clear Wishlist</Text>
+            </TouchableOpacity>
+          }
+        />
+      )}
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   backgroundContainer: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
     padding: 10,
   },
   title: {
@@ -56,13 +56,28 @@ const styles = StyleSheet.create({
     color: PRIMARY,
     fontFamily: 'Poppins-SemiBold',
     padding: 10,
-    paddingTop: 70,
   },
   horizontalLine: {
     width: '95%',
     height: 1,
     backgroundColor: 'rgba(119, 107, 93, 0.2)',
     marginVertical: 10,
+  },
+  emptyMessage: {
+    fontFamily: 'Poppins-Regular',
+    fontSize: 16,
+    color: PRIMARY,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  clearButton: {
+    borderRadius: 5,
+    marginTop: 20,
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    color: PRIMARY,
+    fontSize: 16,
   },
 });
 

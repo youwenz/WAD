@@ -1,8 +1,7 @@
-import {useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import {
   Text,
   View,
-  FlatList,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -12,90 +11,102 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import ArrowIcon from 'react-native-vector-icons/FontAwesome6';
 import DollarIcon from 'react-native-vector-icons/FontAwesome5';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import { PRIMARY, SECONDARY } from '../Style/Color';
 import ReviewCard from './ReviewCard';
 import BottomBar from './BottomBar';
-import {
-  RootStackParamList,
-  RootStackNavigationProp,
-} from '../Type/NavigationParamList';
+import { RootStackParamList, RootStackNavigationProp } from '../Type/NavigationParamList';
 import CustomButton from './CustomButton';
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
+import Ratings from './Ratings';
+import { useFavourites } from '../WishList/FavouriteContext';
+import MapPreview  from './Location'
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
 };
-const image1 = require('../../assets/images/image1.jpg');
-const image2 = require('../../assets/images/image2.jpeg');
-const image3 = require('../../assets/images/image3.jpg');
-const image4 = require('../../assets/images/image4.jpg');
-const coverImage = require('../../assets/images/coverImage.jpg');
 
-const DetailScreen: React.FC<Props> = ({route}) => {
-  const [favourite, setFavourite] = useState(false);
-  const {item} = route.params;
+const DetailScreen: React.FC<Props> = ({ route }) => {
+  const { item } = route.params;
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
+
+  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
+  const [favourite, setFavourite] = useState(false);
+
+  useEffect(() => {
+    setFavourite(isFavourite(item.listing_id));
+  }, [item.listing_id, isFavourite]);
+  
+  const toggleFavourite = () => {
+    if (favourite) {
+      removeFavourite(item.listing_id);
+    } else {
+      addFavourite(item);
+    }
+    setFavourite(!favourite);
+  };
+
   const navigateToCalendar = () => {
     navigation.navigate('CalendarScreen');
   };
+
   return (
     <View style={styles.container}>
-      <ScrollView style={{marginBottom: 100}}>
+      <ScrollView style={{ marginBottom: 100 }}>
         <ImageBackground
           source={item.imageUrl}
-          style={[styles.coverImage, {width: screenWidth}]}>
+          style={[styles.coverImage, { width: screenWidth }]}>
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
             style={styles.gradient}>
             <Text style={styles.overlayText}>{item.title}</Text>
             <View style={styles.review}>
-              <View style={styles.ratings}>
-                <Icon name="star" size={15} color="#FFB23F"></Icon>
-                <Icon name="star" size={15} color="#FFB23F"></Icon>
-                <Icon name="star" size={15} color="#FFB23F"></Icon>
-                <Icon name="star" size={15} color="#FFB23F"></Icon>
-                <Icon name="star" size={15} color="#FFB23F"></Icon>
-              </View>
-              <Text style={styles.cardReview}>100 reviews</Text>
+            <Ratings 
+                star={item.ratings} 
+                text={`${item.ratings} Ratings`}
+                textStyle={styles.cardReview} 
+              />
             </View>
           </LinearGradient>
         </ImageBackground>
 
-        <View style={{alignItems: 'center'}}>
+        <View style={{ alignItems: 'center' }}>
           <View style={styles.featureList}>
             <View style={styles.features}>
-              <ArrowIcon name="map-location-dot" size={20} color={PRIMARY} />
-              <Text style={styles.featureText}>Sungai Long</Text>
+              <ArrowIcon name="map-location-dot" size={20} color={PRIMARY} style={[styles.icon, {position: 'absolute', left: 25}]} />
+              <Text style={[styles.featureText, {paddingLeft: 15}]}>{item.city}</Text>
             </View>
             <View style={styles.features}>
               <DollarIcon name="dollar-sign" size={20} color={PRIMARY} />
-              <Text style={styles.featureText}>RM 129/Room</Text>
+              <Text style={styles.featureText}>RM {item.price}/Room</Text>
             </View>
           </View>
           <View style={styles.featureList}>
             <View style={styles.features}>
               <DollarIcon name="bed" size={20} color={PRIMARY} />
-              <Text style={styles.featureText}>2 Bedrooms</Text>
+              <Text style={styles.featureText}>{item.bedroomNo} Bedrooms</Text>
             </View>
             <View style={styles.features}>
               <DollarIcon name="bath" size={20} color={PRIMARY} />
-              <Text style={styles.featureText}>1 Washroom</Text>
+              <Text style={styles.featureText}>{item.washroomNo} Washroom</Text>
             </View>
           </View>
           <View style={styles.description}>
             <Text style={styles.descriptionHeading}>About</Text>
             <Text style={styles.descriptionText}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Convallis
-              condimentum morbi non egestas enim amet sagittis. Proin sed
-              aliquet rhoncus ut pellentesque ullamcorper sit eget ac.Sit nisi,
-              cras amet varius eget egestas pellentesque. Cursus gravida euismod
-              non...
+             {item.description}
             </Text>
           </View>
+          <View style={styles.description}>
+            <Text style={styles.descriptionHeading}>Address</Text>
+            <Text style={styles.descriptionText}>
+             {item.address}
+            </Text>
+          </View>
+          <MapPreview homestayId={item.listing_id} />
           <View style={styles.description}>
             <Text style={styles.descriptionHeading}>Reviews</Text>
             <Text style={styles.reviewText}>100 reviews</Text>
@@ -124,7 +135,7 @@ const DetailScreen: React.FC<Props> = ({route}) => {
         </View>
       </ScrollView>
       <BottomBar>
-        <Text style={styles.priceText}>RM129/Room</Text>
+        <Text style={styles.priceText}>RM{item.price}/Room</Text>
         <CustomButton text="Book Now" onPressFunction={navigateToCalendar} />
       </BottomBar>
       <TouchableOpacity
@@ -133,7 +144,7 @@ const DetailScreen: React.FC<Props> = ({route}) => {
         <ArrowIcon name="arrow-left" size={16} color="#776B5D" />
       </TouchableOpacity>
       <View style={styles.overlay}>
-        <TouchableOpacity onPress={() => setFavourite(prevState => !prevState)}>
+        <TouchableOpacity onPress={toggleFavourite}>
           <Icon
             name={favourite ? 'heart' : 'heart-o'}
             size={20}
@@ -151,15 +162,6 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
   },
-  heading: {
-    marginTop: 30,
-    fontFamily: 'Poppins-SemiBold',
-    fontSize: 18,
-    color: PRIMARY,
-  },
-  list: {
-    marginVertical: 10,
-  },
   coverImage: {
     top: 0,
     left: 0,
@@ -167,21 +169,6 @@ const styles = StyleSheet.create({
     height: 400,
     resizeMode: 'cover',
     marginBottom: 20,
-  },
-  overlay: {
-    position: 'absolute',
-    top: 30,
-    left: 340,
-    width: 44,
-    height: 44,
-    borderRadius: 50,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 5,
-  },
-  icon: {
-    alignSelf: 'center',
   },
   gradient: {
     position: 'absolute',
@@ -199,22 +186,15 @@ const styles = StyleSheet.create({
   },
   cardReview: {
     fontFamily: 'Poppins-Regular',
-    fontSize: 14,
+    fontSize: 16,
     color: 'white',
-    marginLeft: 6,
+    marginLeft: 10,
   },
   review: {
     flexDirection: 'row',
     marginTop: 0,
     marginLeft: 30,
     marginBottom: 20,
-  },
-  ratings: {
-    flexDirection: 'row',
-    width: 85,
-    height: 15,
-    justifyContent: 'space-around',
-    marginTop: 3,
   },
   backButton: {
     position: 'absolute',
@@ -228,7 +208,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 5,
   },
-  favouriteIcon: {
+  overlay: {
     position: 'absolute',
     top: 30,
     left: 340,
@@ -240,6 +220,9 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     elevation: 5,
   },
+  icon: {
+    alignSelf: 'center',
+  },
   features: {
     height: 45,
     width: 170,
@@ -249,6 +232,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: 10,
   },
   featureList: {
     width: '87%',
@@ -267,7 +251,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-SemiBold',
     color: PRIMARY,
     fontSize: 22,
-    marginBottom: 8,
+    marginBottom: 6,
   },
   description: {
     width: 330,
@@ -277,8 +261,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Poppins-Regular',
     fontSize: 16,
     color: PRIMARY,
+    marginTop: -10,
   },
-
   priceText: {
     fontFamily: 'Poppins-SemiBold',
     color: PRIMARY,

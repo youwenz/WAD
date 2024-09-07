@@ -1,4 +1,4 @@
-import {useState} from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   Text,
   View,
@@ -7,22 +7,19 @@ import {
   Image,
   TouchableOpacity,
   TextInput,
-  ScrollView
+  ScrollView,
+  Animated,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import TravelCard from './TravelCard';
-import Homestay from '../Homestay';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import Homestay from '../../models/Homestay';
+import { PRIMARY, SECONDARY } from '../Style/Color';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
-const image1 = require('../../assets/images/image1.jpg');
-const image2 = require('../../assets/images/image2.jpeg');
-const image3 = require('../../assets/images/image3.jpg');
-const image4 = require('../../assets/images/image4.jpg');
 const coverImage = require('../../assets/images/coverImage.webp');
 
-const filterList: string[] = [
+const initialFilterList: string[] = [
   'Countryside',
   'Beachfront',
   'Cabins',
@@ -31,88 +28,213 @@ const filterList: string[] = [
   'Uptown',
 ];
 
-const homestayList: Homestay[] = [
-  new Homestay('Koh Rong Samloem', 'Camping 1 night at chongkranroy', image1, 5, 'This place is great for people...'),
-  new Homestay('Another Place', '2 day 1 night Siem Reap', image2, 4.5, 'Another description...'),
-  new Homestay('Another Place', '2 day Bangkok, Thailand', image3, 4.5, 'Another description...'),
-  new Homestay('Another Place', 'Camping 2 day at chongkranroy', image4, 4.5, 'Another description...'),
-];
+const shuffleArray = (array: any[]) => {
+  let shuffled = array.slice();
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
 
 const HomeScreen: React.FC = () => {
+  const [searchText, setSearchText] = useState('');
   const navigation = useNavigation();
-  const [selectedFilter, setSelectedFilter] = useState("");
+  const [filterList, setFilterList] = useState<string[]>(initialFilterList);
+  const [selectedFilter, setSelectedFilter] = useState('');
+  const [isSearched, setSearched] = useState(false);
+  const [homestayList, setHomestayList] = useState<Homestay[]>([]);
+  const [filteredHomestays, setFilteredHomestays] = useState<Homestay[]>([]);
+  const animatedValue = useRef(new Animated.Value(0)).current;
+  const [hotDeals, setHotDeals] = useState<Homestay[]>([]);
+  useEffect(() => {
+    const fetchHomestays = async () => {
+      try {
+        const storedHomestayList = await AsyncStorage.getItem('homestayList');
+        if (storedHomestayList !== null) {
+          const homestays = JSON.parse(storedHomestayList);
+          setHotDeals(homestays);
+          setHomestayList(shuffleArray(homestays));
+          console.log('Homestay list retrieved successfully');
+        }
+      } catch (error) {
+        console.log('Error retrieving homestay list from AsyncStorage:', error);
+      }
+    };
+
+    fetchHomestays();
+  }, []); 
+
+  const handleSearch = (text: string) => {
+    setSearchText(text);
+    if (text.length > 0) {
+      const filtered = homestayList.filter(homestay =>
+        homestay.title.toLowerCase().includes(text.toLowerCase()),
+      );
+      setFilteredHomestays(filtered);
+      setSearched(true); 
+    } else {
+      setFilteredHomestays([]);
+      setSearched(false); 
+    }
+  };
+
+  useEffect(() => {
+    // Animate the filter list when the selected filter changes
+    Animated.timing(animatedValue, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: false,
+    }).start(() => {
+      // Reset the animated value after the animation completes
+      animatedValue.setValue(0);
+    });
+  }, [filterList]);
+
   const navigateToDetail = (item: Homestay) => {
-    navigation.navigate('DetailScreen', {item});
+    navigation.navigate('DetailScreen', { item });
   };
+
   const handleFilterPress = (filter: string) => {
-    setSelectedFilter(filter === selectedFilter ? "" : filter);
+    const updatedFilterList = filterList.filter(f => f !== filter);
+    updatedFilterList.unshift(filter); 
+    setFilterList(updatedFilterList);
+    setSelectedFilter(filter === selectedFilter ? '' : filter);
+
+    const shuffledList = shuffleArray(homestayList);
+    setHomestayList(shuffledList); 
   };
+
+  const translateX = animatedValue.interpolate({
+    inputRange: [0, 1],
+    outputRange: [0, 30], // Adjust this value to suit the desired animation effect
+  });
+
   return (
     <View style={styles.container}>
       <ScrollView>
-      <Image source={coverImage} style={styles.coverImage} />
-      <Text style={styles.mainHeading}>Explore the world today</Text>
-      <View style={styles.searchContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Search destination"
-          placeholderTextColor="#A9A9A9"
-        />
-        <Icon name="search" size={20} color="#A9A9A9" style={styles.icon} />
-      </View>
-      <View style={styles.filterList}>
-      <FlatList
-        data={filterList}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => handleFilterPress(item)}>
-            <View
-              style={[styles.filter, {backgroundColor: item === selectedFilter ? PRIMARY : 'white',}]}>
-              <Text
-                style={[styles.filterText, {color: item === selectedFilter ? 'white' : PRIMARY},]}>
-                {item}
-              </Text>
+        <Image source={coverImage} style={styles.coverImage} />
+        <Text style={styles.mainHeading}>Explore the world today</Text>
+        <View style={styles.searchContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search destination"
+            placeholderTextColor="#A9A9A9"
+            onChangeText={handleSearch}
+          />
+          <Icon name="search" size={20} color="#A9A9A9" style={styles.icon} />
+        </View>
+        {isSearched && (
+          <View>
+            <Text style={styles.heading}>
+              {filteredHomestays.length === 0
+                ? 'No homestay found'
+                : `Showing search result for '${searchText}'`}
+            </Text>
+            <FlatList
+              data={filteredHomestays}
+              horizontal={true}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigateToDetail(item)}>
+                  <TravelCard
+                    title={item.title}
+                    description={item.city}
+                    imageUrl={item.imageUrl}
+                    price={item.price}
+                    ratings={item.ratings}
+                    listing_id={item.listing_id}
+                  />
+                </TouchableOpacity>
+              )}
+              keyExtractor={item => item.listing_id.toString()}
+              contentContainerStyle={styles.list}
+            />
+          </View>
+        )}
+        {!isSearched && (
+          <View>
+            <View style={styles.filterList}>
+              <Animated.FlatList
+                data={filterList}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleFilterPress(item)}>
+                    <Animated.View
+                      style={[
+                        styles.filter,
+                        {
+                          backgroundColor:
+                            item === selectedFilter ? PRIMARY : 'white',
+                          transform: [{ translateX }],
+                        },
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.filterText,
+                          { color: item === selectedFilter ? 'white' : PRIMARY },
+                        ]}
+                      >
+                        {item}
+                      </Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                )}
+                keyExtractor={item => item}
+              />
             </View>
-          </TouchableOpacity>
-        )}
-      />
-      </View>
-      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-      <Text style={styles.heading}>Featured Places</Text>
-      <Text style={styles.seeAll}>See all</Text>
-      </View>
-      <FlatList
-        data={homestayList}
-        horizontal={true}
-        style={styles.list}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => navigateToDetail(item)}>
-            <TravelCard
-              title={item.title}
-              description={item.description}
-              imageUrl={item.imageUrl}
+            <View
+              style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+            >
+              <Text style={styles.heading}>
+                {selectedFilter === ''
+                  ? 'Featured Places'
+                  : `${selectedFilter} Places`}
+              </Text>
+              <Text style={styles.seeAll}>See all</Text>
+            </View>
+            <FlatList
+              data={homestayList}
+              horizontal={true}
+              style={styles.list}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigateToDetail(item)}>
+                  <TravelCard
+                    title={item.title}
+                    description={item.city}
+                    imageUrl={item.imageUrl}
+                    price={item.price}
+                    ratings={item.ratings}
+                    listing_id={item.listing_id}
+                  />
+                </TouchableOpacity>
+              )}
+              keyExtractor={item => item.listing_id.toString()}
             />
-          </TouchableOpacity>
-        )}
-      />
-      <Text style={[styles.heading, {marginTop: 20}]}>Hot Deals</Text>
-      <FlatList
-        data={homestayList}
-        horizontal={true}
-        style={styles.list}
-        showsHorizontalScrollIndicator={false}
-        renderItem={({item}) => (
-          <TouchableOpacity onPress={() => navigateToDetail(item)}>
-            <TravelCard
-              title={item.title}
-              description={item.description}
-              imageUrl={item.imageUrl}
+            <Text style={[styles.heading, { marginTop: 20 }]}>Hot Deals</Text>
+            <FlatList
+              data={hotDeals}
+              horizontal={true}
+              style={styles.list}
+              showsHorizontalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <TouchableOpacity onPress={() => navigateToDetail(item)}>
+                  <TravelCard
+                    title={item.title}
+                    description={item.city}
+                    imageUrl={item.imageUrl}
+                    price={item.price}
+                    ratings={item.ratings}
+                    listing_id={item.listing_id}
+                  />
+                </TouchableOpacity>
+              )}
+              keyExtractor={item => item.listing_id.toString()}
             />
-          </TouchableOpacity>
+          </View>
         )}
-      />
       </ScrollView>
     </View>
   );
@@ -129,7 +251,7 @@ const styles = StyleSheet.create({
     color: PRIMARY,
     alignSelf: 'flex-start',
     marginLeft: 30,
-    marginTop: 10
+    marginTop: 10,
   },
   list: {
     marginVertical: 10,
@@ -177,7 +299,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
     height: 50,
   },
-  filter:{
+  filter: {
     height: 36,
     width: 110,
     borderWidth: 1,
@@ -187,19 +309,29 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
   },
-  filterText:{
+  filterText: {
     fontFamily: 'Poppins-Regular',
     fontSize: 14,
     color: PRIMARY,
   },
-  seeAll:{
+  seeAll: {
     fontFamily: 'poppins-light',
     fontSize: 16,
     color: PRIMARY,
     textDecorationLine: 'underline',
     textDecorationColor: PRIMARY,
     marginRight: 30,
-    marginTop: 14
-  }
+    marginTop: 14,
+  },
+  searchResult: {
+    height: 100,
+    width: 300,
+    flexDirection: 'row',
+    margin: 20,
+    borderRadius: 10,
+    borderWidth: 2,
+    borderColor: PRIMARY,
+  },
 });
+
 export default HomeScreen;

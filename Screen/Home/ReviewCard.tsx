@@ -18,7 +18,7 @@ const ReviewCard:React.FC<props> = ({name, title, text, date, ratings}) => {
                   style={styles.name}>
                   {name}
                 </Text>
-                <Ratings star={ratings} text={date} />
+                <Ratings star={ratings} text={date} textStyle={styles.ratingStyle}/>
                 <Text
                   style={styles.title}>
                   {title}
@@ -57,6 +57,9 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: PRIMARY,
         marginTop: 5,
+      },
+      ratingStyle:{
+        color: PRIMARY
       }
 
 })

@@ -1,17 +1,30 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 import Profile from './Profile';
-import { PRIMARY, SECONDARY } from '../Style/Color';
+import {PRIMARY} from '../Style/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { navigate } from '../NavigationService';
 
 const profile1 = require('../../assets/images/profile1.jpg');
 
+interface ProfileScreenProps {
+  setIsLoggedIn: (isLoggedIn: boolean) => void;
+}
+
 const profileList: Profile[] = [
-  new Profile('Seung Ju', 'Korea, Solar System', profile1, '360', '238', '473'),
+  new Profile(
+    'Seung Ju',
+    'Korea, Solar System',
+    profile1,
+    '360',
+    '238',
+    '473',
+    1,
+  ),
 ];
 
-const ProfileScreen: React.FC = () => {
+const ProfileScreen: React.FC<ProfileScreenProps> = ({setIsLoggedIn}) => {
   const navigation = useNavigation();
   const profile = profileList[0];
 
@@ -43,41 +56,43 @@ const ProfileScreen: React.FC = () => {
       <View style={styles.horizontalLine} />
       <View style={styles.accountSettingContainer}>
         <Text style={styles.profileTitle}>Account Setting</Text>
+        <TouchableOpacity onPress={()=> navigate('ChangePassword')}>
+          <View style={styles.accountSettingInnerContainer}>
+            <Icon name="person-circle" size={20} color="#776B5D" />
+            <Text style={styles.accountSettingSubTitle}>Edit profile</Text>
+            <Icon name="chevron-forward-outline" size={20} color="#776B5D" />
+          </View>
+        </TouchableOpacity>
         <View style={styles.accountSettingInnerContainer}>
-          <Icon name="person-circle" size={20} color='#776B5D' />
-          <Text style={styles.accountSettingSubTitle}>Edit profile</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.accountSettingInnerContainer}>
-          <Icon name="language" size={20} color='#776B5D' />
+          <Icon name="language" size={20} color="#776B5D" />
           <Text style={styles.accountSettingSubTitle}>Change language</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
+          <TouchableOpacity>
+            <Icon name="chevron-forward-outline" size={20} color="#776B5D" />
           </TouchableOpacity>
         </View>
         <View style={styles.accountSettingInnerContainer}>
-          <Icon name="moon" size={20} color='#776B5D' />
+          <Icon name="moon" size={20} color="#776B5D" />
           <Text style={styles.accountSettingSubTitle}>Color mode</Text>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon name="chevron-forward-outline" size={20} color='#776B5D' />
+          <TouchableOpacity>
+            <Icon name="chevron-forward-outline" size={20} color="#776B5D" />
           </TouchableOpacity>
         </View>
-        <Text style={styles.profileTitle}>Derleng Legal</Text>
+        <Text style={styles.profileTitle}>Legal</Text>
         <View style={styles.accountSettingInnerContainer}>
-          <Icon name="document-text" size={20} color='#776B5D' />
+          <Icon name="document-text" size={20} color="#776B5D" />
           <Text style={styles.accountSettingSubTitle}>Terms and Condition</Text>
-          <Icon name="open-outline" size={20} color='#776B5D' />
+          <Icon name="open-outline" size={20} color="#776B5D" />
         </View>
         <View style={styles.accountSettingInnerContainer}>
-          <Icon name="shield-half-outline" size={20} color='#776B5D' />
+          <Icon name="shield-half-outline" size={20} color="#776B5D" />
           <Text style={styles.accountSettingSubTitle}>Privacy policy</Text>
-          <Icon name="open-outline" size={20} color='#776B5D' />
+          <Icon name="open-outline" size={20} color="#776B5D" />
         </View>
+        <TouchableOpacity onPress={()=>setIsLoggedIn(false)}>
         <View style={styles.logoutContainer}>
           <Text style={styles.logout}>Logout</Text>
         </View>
+        </TouchableOpacity>
         <Text style={styles.version}>Version 3.0.0</Text>
       </View>
     </View>
@@ -96,7 +111,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     paddingRight: 18,
     margin: 15,
-    marginTop:100,
+    marginTop: 100,
   },
   image: {
     width: 70,

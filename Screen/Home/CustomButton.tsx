@@ -6,15 +6,17 @@ interface props {
   textColor?: string;
   text: string;
   onPressFunction: () => void;
+  width?: number;
 }
 const CustomButton: React.FC<props> = ({
   backgroundColor=PRIMARY,
   textColor='white',
   text,
   onPressFunction,
+  width = 175,
 }) => {
   return (
-    <TouchableOpacity style={[styles.button, {backgroundColor}]} onPress={onPressFunction}>
+    <TouchableOpacity style={[styles.button, {backgroundColor, width}]} onPress={onPressFunction}>
       <Text style={[styles.buttonText, {color: textColor}]}>{text}</Text>
     </TouchableOpacity>
   );

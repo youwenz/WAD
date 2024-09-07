@@ -1,4 +1,4 @@
-import Homestay from '../Homestay';
+import Homestay from '../../models/Homestay';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
 
@@ -11,6 +11,7 @@ export type RootStackParamList = {
   PaymentMethodScreen: PaymentMethodScreenParams; 
   CreditDebitCardScreen:CreditDebitCardScreenParams;
   TngoScreen:TngoScreenParams;
+  ChatScreen: undefined;
 };
 
 // Create a type for stack navigation prop
@@ -63,3 +64,5 @@ interface PaymentMethodScreenParams {
   title: string;
   imageUrl: string;
 }
+
+
