@@ -1,7 +1,8 @@
-import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import React , {useState, useEffect} from 'react';
+import {View, Text, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Profile from './Profile';
+import {useFavourites} from '../WishList/FavouriteContext';
+import {getDBConnection, getUsers } from '../Login/database.ts';
 import {PRIMARY} from '../Style/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigate } from '../NavigationService';
@@ -12,45 +13,58 @@ interface ProfileScreenProps {
   setIsLoggedIn: (isLoggedIn: boolean) => void;
 }
 
-const profileList: Profile[] = [
-  new Profile(
-    'Seung Ju',
-    'Korea, Solar System',
-    profile1,
-    '360',
-    '238',
-    '473',
-    1,
-  ),
-];
-
 const ProfileScreen: React.FC<ProfileScreenProps> = ({setIsLoggedIn}) => {
   const navigation = useNavigation();
-  const profile = profileList[0];
+  const [profile, setProfile] = useState<any>(null);
+  const {favourites, bucketListCount} = useFavourites();
+
+  const fetchUserProfile = async () => {
+    try {
+      const db = await getDBConnection();
+      const users = await getUsers(db);
+
+      if (users.length > 0) {
+        setProfile(users[0]);
+      } else {
+        Alert.alert('No users found');
+      }
+    } catch (error) {
+      console.error("Error fetching user profile", error);
+      Alert.alert('Error fetching profile');
+    }
+  }
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  if (!profile) {
+    return <Text>Loading...</Text>;
+  }
 
   return (
     <View style={styles.container}>
       <View style={styles.personContainer}>
-        <Image style={styles.image} source={profile.imageUrl} />
+        <Image style={styles.image} source={profile.profile_picture ? {uri: profile.profile_picture } : require('../../assets/images/profile1.jpg')} />
         <View style={styles.personDetailsContainer}>
           <Text style={styles.name}>{profile.name}</Text>
-          <Text style={styles.description}>{profile.nation}</Text>
+          <Text style={styles.description}>Email: {profile.email}</Text>
         </View>
       </View>
       <View style={styles.travelDetailsContainer}>
         <View style={styles.travelDetailsInnerContainer}>
-          <Text style={styles.travelDetailsTitle}>Reward Points</Text>
-          <Text style={styles.travelDetailsText}>{profile.rewardPoints}</Text>
+          <Text style={styles.travelDetailsTitle}>Age</Text>
+          <Text style={styles.travelDetailsText}>{profile.age}</Text>
         </View>
         <View style={styles.verticalLine} />
         <View style={styles.travelDetailsInnerContainer}>
-          <Text style={styles.travelDetailsTitle}>Travel Trips</Text>
-          <Text style={styles.travelDetailsText}>{profile.travelTrips}</Text>
+          <Text style={styles.travelDetailsTitle}>Phone</Text>
+          <Text style={styles.travelDetailsText}>{profile.phone_number}</Text>
         </View>
         <View style={styles.verticalLine} />
         <View style={styles.travelDetailsInnerContainer}>
           <Text style={styles.travelDetailsTitle}>Bucket List</Text>
-          <Text style={styles.travelDetailsText}>{profile.bucketList}</Text>
+          <Text style={styles.travelDetailsText}>{bucketListCount}</Text>
         </View>
       </View>
       <View style={styles.horizontalLine} />
