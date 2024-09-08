@@ -6,3 +6,4 @@ const db = SQLite.openDatabase(
   () => { console.log('Database opened successfully'); },
   error => { console.error('Database error: ', error); }
 );
+

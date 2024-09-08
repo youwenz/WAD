@@ -11,7 +11,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import io from 'socket.io-client';
-import {PRIMARY, SECONDARY} from '../../Screen/Style/Color';
+import {PRIMARY, SECONDARY} from '../Style/Color';
 
 const socket = io('http://10.0.2.2:5000', {transports: ['websocket']});
 
