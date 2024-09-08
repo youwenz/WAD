@@ -1,33 +1,41 @@
 import React, { useState } from 'react';
 import {
-  SafeAreaView,
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  StatusBar,
-  Modal,
+  SafeAreaView, View, Text, Image, TouchableOpacity, StyleSheet, StatusBar, Modal,
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import BottomBar from '../Home/BottomBar'; // Adjust import as needed
-import { PRIMARY } from '../Style/Color'; // Adjust import as needed
+import { useNavigation, useRoute } from '@react-navigation/native';
+import BottomBar from '../Home/BottomBar';
+import { PRIMARY } from '../Style/Color';
+import { getDBConnection, addBooking } from '../BookingDetails/bookingDb';
 
 const TngoScreen: React.FC = () => {
   const navigation = useNavigation();
+  const route = useRoute();
   const [modalVisible, setModalVisible] = useState(false);
 
-  const handleConfirmPayment = () => {
-    setModalVisible(true);
+  // Destructure the params from route
+  const { hotelName, checkInDate, checkOutDate, price, phoneNumber, orderId } = route.params;
+
+  const handleProceedPayment = async () => {
+    try {
+      const db = await getDBConnection();
+      console.log('Database connection established');
+      await addBooking(db, hotelName, checkInDate, checkOutDate, price);
+      console.log('Booking added successfully');
+      setModalVisible(true); // Show modal after successful booking
+    } catch (error) {
+      console.error('Failed to add booking:', error);
+    }
   };
 
+  // Navigation functions
   const handleBackToHome = () => {
     setModalVisible(false);
-    navigation.navigate('HomeScreen'); 
+    navigation.navigate('Home');
   };
 
-  const handleProceedPayment = () => {
-    handleConfirmPayment();
+  const handleViewBookingHistory = () => {
+    setModalVisible(false);
+    navigation.navigate('History');
   };
 
   return (
@@ -36,21 +44,29 @@ const TngoScreen: React.FC = () => {
       <View style={styles.content}>
         <View style={styles.paymentDetailsContainer}>
           <Image
-            source={require('../../assets/images/tngoIcon.png')} // Adjust path to your TNGO logo image
+            source={require('../../assets/images/tngoIcon.png')}
             style={styles.logo}
           />
-          <Text style={styles.phoneNumber}>+60*****1557</Text>
-          <Text style={styles.price}>RM 100.00</Text>
-          
+          {/* Dynamically display the phone number */}
+          <Text style={styles.phoneNumber}>{phoneNumber}</Text>
+          {/* Dynamically display the price from the route params */}
+          <Text style={styles.price}>RM {price}</Text>
+
           <View style={styles.paymentDetails}>
             <Text style={styles.detailLabel}>Payment Details</Text>
+
+            <View style={styles.detailRow}>
+              <Text style={styles.detailTitle}>Order Number:</Text>
+              <Text style={styles.detailValue}>{orderId}</Text>
+            </View>
+
             <View style={styles.detailRow}>
               <Text style={styles.detailTitle}>Merchant:</Text>
               <Text style={styles.detailValue}>travel.com</Text>
             </View>
           </View>
         </View>
-        
+
         {/* Modal View */}
         <Modal
           transparent={true}
@@ -62,21 +78,27 @@ const TngoScreen: React.FC = () => {
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Payment Complete</Text>
               <Text style={styles.modalMessage}>Your payment has been successfully processed.</Text>
-              <TouchableOpacity 
-                style={styles.modalButton} 
+              <TouchableOpacity
+                style={styles.modalButton}
                 onPress={handleBackToHome}
               >
                 <Text style={styles.modalButtonText}>Back to Home</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.modalButton}
+                onPress={handleViewBookingHistory}
+              >
+                <Text style={styles.modalButtonText}>View Booking History</Text>
               </TouchableOpacity>
             </View>
           </View>
         </Modal>
       </View>
-   
+
       <BottomBar style={styles.bottomBar}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.bottomBarButton}
-          onPress={handleProceedPayment} 
+          onPress={handleProceedPayment}
         >
           <Text style={styles.bottomBarButtonText}>Proceed Payment</Text>
         </TouchableOpacity>
@@ -137,20 +159,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#333',
   },
-  confirmButton: {
-    width: '100%',
-    height: 52,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 15,
-    backgroundColor: PRIMARY,
-    marginTop: 20,
-  },
-  confirmButtonText: {
-    fontSize: 16,
-    color: 'white',
-    fontWeight: 'bold',
-  },
   modalContainer: {
     position: 'absolute',
     top: 0,
@@ -185,6 +193,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 15,
     backgroundColor: PRIMARY,
+    marginBottom: 10,
   },
   modalButtonText: {
     fontSize: 16,

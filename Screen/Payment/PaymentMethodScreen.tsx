@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import BottomBar from '../Home/BottomBar';
 import { PRIMARY } from '../Style/Color';
-import Notification from '../Notification/Notification';
+import { useRoute } from '@react-navigation/native';
 
 const PAYMENT_METHODS = [
   {
@@ -34,9 +34,22 @@ const PAYMENT_METHODS = [
 
 const PaymentMethodScreen: React.FC = () => {
   const navigation = useNavigation();
-  
+  const route = useRoute();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string>('');
+
+  const { hotelName, hotelImage, price } = route.params;
+
+  const generateOrderId = () => {
+    const randomNum = Math.floor(10000 + Math.random() * 90000); // Generates a random 5-digit number
+    return `Od${randomNum}`;
+  };
+
+  useEffect(() => {
+    const newOrderId = generateOrderId();
+    setOrderId(newOrderId); // Set the generated order ID
+  }, []);
 
   const renderPaymentOption = ({ item }: { item: typeof PAYMENT_METHODS[0] }) => (
     <View
@@ -78,39 +91,58 @@ const PaymentMethodScreen: React.FC = () => {
 
   const handleSubmit = () => {
     if (selectedId === '1' || selectedId === '2') {
-      navigation.navigate('CreditDebitCardScreen');
+      navigation.navigate('CreditDebitCardScreen', {
+        hotelName,
+        checkInDate: route.params.checkInDate,
+        checkOutDate: route.params.checkOutDate,
+        guestName: route.params.guestName,
+        phone: route.params.phone,
+        price,
+        orderId,
+      });
     } else if (selectedId === '3') {
-      navigation.navigate('TngoScreen');
+      navigation.navigate('TngoScreen', {
+        hotelName,
+        checkInDate: route.params.checkInDate,
+        checkOutDate: route.params.checkOutDate,
+        guestName: route.params.guestName,
+        phone: route.params.phone,
+        price,
+        orderId,
+      });
     }
   };
   
-
+  
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.scrollContainer}>
         <View style={styles.hotelSection}>
-          <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.hotelImage} />
+          <Image
+            source={typeof hotelImage === 'string' ? { uri: hotelImage } : hotelImage}
+            style={styles.hotelImage}
+          />
+
           <View style={styles.hotelInfo}>
-            <Text style={styles.hotelName}>Hotel Name</Text>
-            <Text style={styles.orderNumber}>Order #: 123456</Text>
+            <Text style={styles.hotelName}>{hotelName}</Text>
+            {/* Display generated order ID */}
+            <Text style={styles.orderNumber}>Order #: {orderId}</Text>
           </View>
         </View>
 
         <View style={styles.priceSection}>
-          <View style={styles.priceLeft}>
-            <Text style={styles.priceTitle}>Total Price</Text>
-            <Text style={styles.taxText}>(include tax)</Text>
-          </View>
-          <Text style={styles.priceAmount}>$100</Text>
+          {/* Align the price to the right */}
+          <Text style={styles.priceAmount}>RM{price}</Text>
         </View>
-
-        <FlatList
-          data={PAYMENT_METHODS}
-          renderItem={renderPaymentOption}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.paymentOptions}
-        />
       </View>
+
+      <FlatList
+        data={PAYMENT_METHODS}
+        renderItem={renderPaymentOption}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.paymentOptions}
+      />
 
       <BottomBar style={styles.bottomBar}>
         <TouchableOpacity 
@@ -128,7 +160,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: StatusBar.currentHeight || 0,
+    // Move screen content up by removing extra margin at the top
   },
   scrollContainer: {
     padding: 16,
@@ -158,26 +190,13 @@ const styles = StyleSheet.create({
   },
   priceSection: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end', // Align price to the right
     marginHorizontal: 20,
     marginBottom: 20,
     borderTopWidth: 1, 
     borderBottomWidth: 1, 
     borderColor: '#C4C4C4',
     paddingVertical: 10, // Padding for vertical spacing
-  },
-  priceLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  priceTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10, // Space between title and tax text
-  },
-  taxText: {
-    fontSize: 16,
-    color: '#B0A695',
   },
   priceAmount: {
     fontSize: 18,
@@ -227,7 +246,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 15,
-      backgroundColor:PRIMARY,
+      backgroundColor: PRIMARY,
     },
     buttonText: {
       fontFamily: 'Poppins-Medium',

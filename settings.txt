@@ -1,0 +1,4 @@
+root: C:\Users\GreyHat\wadasmt\WAD 
+path: C:\Program Files\nodejs 
+arch: 64 
+proxy: none

@@ -1,18 +1,11 @@
-import React, {useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Dimensions,
-} from 'react-native';
-import {CalendarList} from 'react-native-calendars';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Alert, Dimensions } from 'react-native';
+import { CalendarList } from 'react-native-calendars';
+import { PRIMARY, SECONDARY } from '../Style/Color';
 import CustomButton from './CustomButton';
 import moment from 'moment';
 import BottomBar from './BottomBar';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const CalendarScreen: React.FC = () => {
   const [selectedStartDate, setSelectedStartDate] = useState<string | null>(
@@ -20,6 +13,8 @@ const CalendarScreen: React.FC = () => {
   );
   const [selectedEndDate, setSelectedEndDate] = useState<string | null>(null);
   const navigation = useNavigation();
+  const route = useRoute();
+  const { hotelName, hotelImage, price } = route.params;
 
   const handleDayPress = (day: {dateString: string}) => {
     if (!selectedStartDate || (selectedStartDate && selectedEndDate)) {
@@ -30,20 +25,22 @@ const CalendarScreen: React.FC = () => {
     }
   };
 
-  const handleConfirm = () => {
+    const handleConfirm = () => {
     if (selectedStartDate && selectedEndDate) {
-      // Handle the booking logic here
-      console.log('Start Date:', selectedStartDate);
-      console.log('End Date:', selectedEndDate);
-
-      // Navigate to BookingDetailsScreen without displaying the dates
-      navigation.navigate('BookingDetailsScreen');
-
+      navigation.navigate('BookingDetailsScreen', {
+        hotelName,
+        hotelImage,
+        price,
+        checkInDate: selectedStartDate,
+        checkOutDate: selectedEndDate,
+      });
     } else {
       Alert.alert('Please select both start and end dates.');
     }
   };
-
+  
+  
+  
   const getMarkedDates = () => {
     const markedDates: {[key: string]: any} = {};
 

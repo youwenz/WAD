@@ -10,7 +10,7 @@ import DetailScreen from '../Screen/Home/DetailScreen';
 import {PRIMARY, SECONDARY} from '../Screen/Style/Color';
 import FAIcon from 'react-native-vector-icons/FontAwesome5';
 import ProfileScreen from '../Screen/Profile/ProfileScreen';
-import NotificationScreen from '../Screen/Notification/NotificationScreen';
+import BookingHistoryScreen from './History/BookingHistoryScreen';
 import WishListScreen from '../Screen/WishList/WishListScreen';
 import CalendarScreen from '../Screen/Home/CalendarScreen';
 import {RootStackParamList} from '../Screen/Type/NavigationParamList';
@@ -19,8 +19,9 @@ import PaymentMethodScreen from '../Screen/Payment/PaymentMethodScreen';
 import CreditDebitCardScreen from '../Screen/Payment/CreditDebitCardScreen';
 import TngoScreen from '../Screen/Payment/TngoScreen';
 import {FavouritesProvider} from '../Screen/WishList/FavouriteContext';
-import ChatScreen from '../Screen/Notification/ChatScreen';
+import ChatScreen from './History/ChatScreen';
 import {saveHomestayList} from '../models/AsyncStorage';
+
 
 const MyTheme = {
   ...DefaultTheme,
@@ -113,13 +114,13 @@ function MainTabScreen({setIsLoggedIn}: { setIsLoggedIn: (isLoggedIn: boolean) =
             iconName = 'home';
           } else if (route.name === 'WishList') {
             iconName = 'heart';
-          } else if (route.name === 'Notification') {
-            iconName = 'bell';
+          } else if (route.name === 'History') {
+            iconName = 'clock';
           } else {
             iconName = 'user';
           }
 
-          if (iconName !== 'Notification') {
+          if (iconName !== 'History') {
             return <Icon name={iconName} size={size} color={color} />;
           } else {
             return <FAIcon name={iconName} size={size} color={color} />;
@@ -156,8 +157,8 @@ function MainTabScreen({setIsLoggedIn}: { setIsLoggedIn: (isLoggedIn: boolean) =
         }}
       />
       <Tab.Screen
-        name="Notification"
-        component={NotificationScreen}
+        name="History"
+        component={BookingHistoryScreen}
         options={{
           headerShown: false,
         }}

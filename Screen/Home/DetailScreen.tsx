@@ -50,8 +50,12 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
   };
 
   const navigateToCalendar = () => {
-    navigation.navigate('CalendarScreen');
-  };
+    navigation.navigate('CalendarScreen', {
+      hotelName: item.title,  
+      hotelImage: item.imageUrl,  
+      price: item.price  
+  });
+};
 
   return (
     <View style={styles.container}>
