@@ -25,7 +25,7 @@ const ChatScreen = () => {
     // Listen for the connection event
     socket.on('connect', () => {
       console.log('Connected to backend with socket id:', socket.id);
-      ToastAndroid.show('Connected to server', ToastAndroid.LONG); // Show Toast upon successful connection
+      ToastAndroid.show('Connected to server', ToastAndroid.LONG); 
     });
 
     // Handle reconnection and display a toast
