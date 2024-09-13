@@ -11,7 +11,7 @@ import {
   ToastAndroid,
 } from 'react-native';
 import io from 'socket.io-client';
-import {PRIMARY, SECONDARY} from '../../Screen/Style/Color';
+import {PRIMARY, SECONDARY} from '../Style/Color';
 
 const socket = io('http://10.0.2.2:5000', {transports: ['websocket']});
 
@@ -25,7 +25,7 @@ const ChatScreen = () => {
     // Listen for the connection event
     socket.on('connect', () => {
       console.log('Connected to backend with socket id:', socket.id);
-      ToastAndroid.show('Connected to server', ToastAndroid.LONG); // Show Toast upon successful connection
+      ToastAndroid.show('Connected to server', ToastAndroid.LONG); 
     });
 
     // Handle reconnection and display a toast

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   SafeAreaView,
   View,
@@ -12,7 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import BottomBar from '../Home/BottomBar';
 import { PRIMARY } from '../Style/Color';
-import Notification from '../Notification/Notification';
+import { useRoute } from '@react-navigation/native';
 
 const PAYMENT_METHODS = [
   {
@@ -34,9 +34,22 @@ const PAYMENT_METHODS = [
 
 const PaymentMethodScreen: React.FC = () => {
   const navigation = useNavigation();
-  
+  const route = useRoute();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [orderId, setOrderId] = useState<string>('');
+
+  const { hotelName, hotelImage, price } = route.params;
+
+  const generateOrderId = () => {
+    const randomNum = Math.floor(10000 + Math.random() * 90000); // Generates a random 5-digit number
+    return `Od${randomNum}`;
+  };
+
+  useEffect(() => {
+    const newOrderId = generateOrderId();
+    setOrderId(newOrderId); // Set the generated order ID
+  }, []);
 
   const renderPaymentOption = ({ item }: { item: typeof PAYMENT_METHODS[0] }) => (
     <View
@@ -44,12 +57,12 @@ const PaymentMethodScreen: React.FC = () => {
         styles.paymentOption,
         {
           borderColor: selectedId === item.id || hoveredId === item.id ? '#776B5D' : '#C4C4C4',
-          backgroundColor: '#fff', // Always white
-          shadowColor: selectedId === item.id ? '#776B5D' : 'transparent', // Shadow color when selected
-          shadowOffset: { width: 0, height: 4 }, // Shadow offset
-          shadowOpacity: selectedId === item.id ? 0.3 : 0, // Shadow opacity when selected
-          shadowRadius: 8, // Shadow radius
-          elevation: selectedId === item.id ? 8 : 0, // Elevation for Android shadow
+          backgroundColor: '#fff',
+          shadowColor: selectedId === item.id ? '#776B5D' : 'transparent', 
+          shadowOffset: { width: 0, height: 4 }, 
+          shadowOpacity: selectedId === item.id ? 0.3 : 0, 
+          shadowRadius: 8, 
+          elevation: selectedId === item.id ? 8 : 0, 
         },
       ]}
       onTouchStart={() => setHoveredId(item.id)}
@@ -64,7 +77,7 @@ const PaymentMethodScreen: React.FC = () => {
           styles.selectButton,
           {
             borderColor: selectedId === item.id ? '#776B5D' : '#C4C4C4',
-            backgroundColor: selectedId === item.id ? '#fff' : 'transparent', // Fill color when not selected
+            backgroundColor: selectedId === item.id ? '#fff' : 'transparent', 
           }
         ]}
         onPress={() => setSelectedId(item.id)}
@@ -78,39 +91,56 @@ const PaymentMethodScreen: React.FC = () => {
 
   const handleSubmit = () => {
     if (selectedId === '1' || selectedId === '2') {
-      navigation.navigate('CreditDebitCardScreen');
+      navigation.navigate('CreditDebitCardScreen', {
+        hotelName,
+        checkInDate: route.params.checkInDate,
+        checkOutDate: route.params.checkOutDate,
+        guestName: route.params.guestName,
+        phone: route.params.phone,
+        price,
+        orderId,
+      });
     } else if (selectedId === '3') {
-      navigation.navigate('TngoScreen');
+      navigation.navigate('TngoScreen', {
+        hotelName,
+        checkInDate: route.params.checkInDate,
+        checkOutDate: route.params.checkOutDate,
+        guestName: route.params.guestName,
+        phone: route.params.phone,
+        price,
+        orderId,
+      });
     }
   };
   
-
+  
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.scrollContainer}>
         <View style={styles.hotelSection}>
-          <Image source={{ uri: 'https://via.placeholder.com/150' }} style={styles.hotelImage} />
+          <Image
+            source={typeof hotelImage === 'string' ? { uri: hotelImage } : hotelImage}
+            style={styles.hotelImage}
+          />
+
           <View style={styles.hotelInfo}>
-            <Text style={styles.hotelName}>Hotel Name</Text>
-            <Text style={styles.orderNumber}>Order #: 123456</Text>
+            <Text style={styles.hotelName}>{hotelName}</Text>
+            <Text style={styles.orderNumber}>Order #: {orderId}</Text>
           </View>
         </View>
 
         <View style={styles.priceSection}>
-          <View style={styles.priceLeft}>
-            <Text style={styles.priceTitle}>Total Price</Text>
-            <Text style={styles.taxText}>(include tax)</Text>
-          </View>
-          <Text style={styles.priceAmount}>$100</Text>
+          <Text style={styles.priceAmount}>RM{price}</Text>
         </View>
-
-        <FlatList
-          data={PAYMENT_METHODS}
-          renderItem={renderPaymentOption}
-          keyExtractor={item => item.id}
-          contentContainerStyle={styles.paymentOptions}
-        />
       </View>
+
+      <FlatList
+        data={PAYMENT_METHODS}
+        renderItem={renderPaymentOption}
+        keyExtractor={item => item.id}
+        contentContainerStyle={styles.paymentOptions}
+      />
 
       <BottomBar style={styles.bottomBar}>
         <TouchableOpacity 
@@ -128,7 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    marginTop: StatusBar.currentHeight || 0,
   },
   scrollContainer: {
     padding: 16,
@@ -158,26 +187,13 @@ const styles = StyleSheet.create({
   },
   priceSection: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-end', 
     marginHorizontal: 20,
     marginBottom: 20,
     borderTopWidth: 1, 
     borderBottomWidth: 1, 
     borderColor: '#C4C4C4',
-    paddingVertical: 10, // Padding for vertical spacing
-  },
-  priceLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  priceTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginRight: 10, // Space between title and tax text
-  },
-  taxText: {
-    fontSize: 16,
-    color: '#B0A695',
+    paddingVertical: 10,
   },
   priceAmount: {
     fontSize: 18,
@@ -213,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
-    backgroundColor: 'transparent', // Initially transparent
+    backgroundColor: 'transparent', 
   },
   innerCircle: {
     width: 20,
@@ -227,7 +243,7 @@ const styles = StyleSheet.create({
       justifyContent: 'center',
       alignItems: 'center',
       borderRadius: 15,
-      backgroundColor:PRIMARY,
+      backgroundColor: PRIMARY,
     },
     buttonText: {
       fontFamily: 'Poppins-Medium',
