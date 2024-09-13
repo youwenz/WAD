@@ -11,7 +11,8 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Modal 
+  Modal,
+  Alert
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { PRIMARY } from '../Style/Color'; 
@@ -53,17 +54,25 @@ const CreditDebitCardScreen: React.FC = () => {
   };
 
   const handleProceedPayment = async () => {
-    if (!validateFields()) return;
+    if (!validateFields()) {
+      Alert.alert(
+        'Invalid Input',
+        'Please ensure all fields are filled in correctly.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
   
     try {
       const db = await getDBConnection();
-      await addBooking(db, hotelName, checkInDate, checkOutDate, price); 
+      await addBooking(db, hotelName, checkInDate, checkOutDate, price);
       setSuccess(true); // Set success to true to show the modal
       setModalVisible(true);
     } catch (error) {
-      console.error('Failed to add booking:', error); 
+      console.error('Failed to add booking:', error);
     }
   };
+  
   // Navigation functions
   const handleBackToHome = () => {
     setModalVisible(false);

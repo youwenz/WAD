@@ -50,9 +50,11 @@ const BookingDetailsScreen: React.FC = () => {
         checkInDate: route.params.checkInDate,
         checkOutDate: route.params.checkOutDate,
       });
-      console.log('Button pressed!');
+    } else {
+      Alert.alert('Invalid Input', 'Please ensure all fields are filled in correctly.');
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
