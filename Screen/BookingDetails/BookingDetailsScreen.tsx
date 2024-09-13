@@ -133,7 +133,7 @@ const BookingDetailsScreen: React.FC = () => {
           </ScrollView>
           <BottomBar style={styles.bottomBar}>
             <View style={styles.bottomBarContent}>
-              <Text style={styles.totalPrice}>Total Price: {price}</Text>
+              <Text style={styles.totalPrice}>Total Price: ${price}</Text>
               <CustomButton text="Next" onPressFunction={handleSubmit} />
             </View>
           </BottomBar>

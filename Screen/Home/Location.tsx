@@ -51,8 +51,8 @@ const MapPreview = ({homestayId}: HomestayLocationProps) => {
       latitude: 40.787,
     },
     9: {
-      longitude: -118.6919,
-      latitude: 34.0256,
+      longitude: -118.78294,
+      latitude: 34.06739,
     },
     10: {
       longitude: -106.9382,
