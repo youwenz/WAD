@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ArrowIcon from 'react-native-vector-icons/FontAwesome6';
 import DollarIcon from 'react-native-vector-icons/FontAwesome5';
 import { PRIMARY, SECONDARY } from '../Style/Color';
@@ -21,38 +21,88 @@ import { RootStackParamList, RootStackNavigationProp } from '../Type/NavigationP
 import CustomButton from './CustomButton';
 import { RouteProp } from '@react-navigation/native';
 import Ratings from './Ratings';
-import { useFavourites } from '../WishList/FavouriteContext';
+import { addToWishlist, getWishlist, removeFromWishlist } from '../WishList/wishlistService';
 import MapPreview  from './Location'
+import { WishItem } from '../WishList/wishItemTypes';
+import Homestay from '../../models/Homestay';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
+};
+
+const isWishItem = (item: any): item is WishItem => {
+  return (item as WishItem).listing_id !== undefined;
+};
+
+const isHomestay = (item: any): item is Homestay => {
+  return (item as Homestay).listing_id !== undefined; 
 };
 
 const DetailScreen: React.FC<Props> = ({ route }) => {
   const { item } = route.params;
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
-
-  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
+  
   const [favourite, setFavourite] = useState(false);
+  const [currentItem, setCurrentItem] = useState(item);
 
   useEffect(() => {
-    setFavourite(isFavourite(item.listing_id));
-  }, [item.listing_id, isFavourite]);
-  
-  const toggleFavourite = () => {
-    if (favourite) {
-      removeFavourite(item.listing_id);
-    } else {
-      addFavourite(item);
+    if (item) {
+      setCurrentItem(item);
     }
-    setFavourite(!favourite);
+  }, [item]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchWishlist = async () => {
+        try {
+          const wishlist = await getWishlist();
+          const isFavorited = wishlist.some((wishItem) => wishItem.listing_id === item.listing_id);
+          setFavourite(isFavorited);
+        } catch (error) {
+          console.error('Error fetching wishlist:', error);
+        }
+      };
+  
+      fetchWishlist();
+    }, [item.listing_id])
+  );
+
+  const toggleFavourite = async () => {
+    if (item.listing_id === undefined) {
+      console.error('Listing ID is undefined');
+      return;
+    }
+    
+    const itemToAdd: WishItem = {
+      listing_id: item.listing_id,
+      title: item.title,
+      image: item.image, 
+      ratings: item.ratings,
+      city: item.city,
+      address: item.address,
+      price: item.price,
+      description: item.description,
+      bedroomNo: item.bedroomNo,
+      washroomNo: item.washroomNo,
+    };
+
+    try {
+      if (favourite) {
+        await removeFromWishlist(item.listing_id);
+      } else {
+        await addToWishlist(itemToAdd);
+      }
+      setFavourite(!favourite);
+    } catch (error) {
+      console.error('Error toggling favourite:', error);
+    }
   };
 
   const navigateToCalendar = () => {
     navigation.navigate('CalendarScreen', {
       hotelName: item.title,  
-      hotelImage: item.imageUrl,  
+      hotelImage: item.image,  
       price: item.price  
   });
 };
@@ -61,7 +111,7 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
     <View style={styles.container}>
       <ScrollView style={{ marginBottom: 100 }}>
         <ImageBackground
-          source={item.imageUrl}
+          source={item.image}
           style={[styles.coverImage, { width: screenWidth }]}>
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}

@@ -1,49 +1,92 @@
-import React, {useState} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
-  SafeAreaView,
   StyleSheet,
   Image,
   TouchableOpacity,
   ImageSourcePropType,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import { PRIMARY, SECONDARY } from '../Style/Color';
 import Ratings from './Ratings';
-import { useFavourites } from '../WishList/FavouriteContext';
+import { addToWishlist, getWishlist, removeFromWishlist  } from '../WishList/wishlistService';
+import { WishItem } from '../WishList/wishItemTypes';
+import { useFocusEffect } from '@react-navigation/native';
 
-interface props {
+interface Props {
   title: string;
   description: string;
-  imageUrl: ImageSourcePropType;
+  image: ImageSourcePropType;
   ratings: number;
+  city: string;
   price: number;
+  address: string;
+  bedroomNo: number;
+  washroomNo: number;
   listing_id: number;
 }
 
-const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, price, listing_id }) => {
-  const { addFavourite, removeFavourite, isFavourite } = useFavourites();
-  const favourite = isFavourite(listing_id);
+const TravelCard: React.FC<Props> = ({ title, description, image, ratings, city, price, address, bedroomNo, washroomNo,listing_id }) => {
+  const [favourite, setFavourite] = useState<boolean>(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const fetchWishlist = async () => {
+        try {
+          const wishlist = await getWishlist();
+          const isFavorited = wishlist.some(item => item.listing_id === listing_id);
+          setFavourite(isFavorited);
+        } catch (error) {
+          console.error('Error fetching wishlist:', error);
+        }
+      };
   
-  const toggleFavourite = () => {
-    if (favourite) {
-      removeFavourite(listing_id);
-    } else {
-      addFavourite({ title, description, imageUrl, ratings, price, listing_id });
+      fetchWishlist();
+    }, [listing_id])
+  ); 
+
+  const toggleFavourite = async () => {
+    if (listing_id === undefined) {
+      console.error('Listing ID is undefined');
+      return;
     }
-  }
+    const item: WishItem = {
+      listing_id: listing_id,
+      title: title,
+      image: image, 
+      ratings: ratings,
+      city: city,
+      address: address,
+      price: price,
+      description: description,
+      bedroomNo: bedroomNo,
+      washroomNo: washroomNo,
+    };
+    try {
+      if (!favourite) {
+        await addToWishlist(item);
+      } else {
+        await removeFromWishlist(listing_id);
+      }
+      setFavourite(prev => !prev);
+    } catch (error) {
+      console.error('Error toggling favourite:', error);
+    }
+  };
+  
+
 
   return (
     <View style={styles.cardBackground}>
       <View style={styles.cardImage}>
         <Image
-          source={imageUrl}
+          source={image}
           resizeMode="cover"
-          style={styles.image}></Image>
+          style={styles.image}
+        />
         <View style={styles.overlay}>
-          <TouchableOpacity
-            onPress={toggleFavourite}>
+          <TouchableOpacity onPress={toggleFavourite}>
             <Icon
               name={favourite ? 'heart' : 'heart-o'}
               size={20}
@@ -54,11 +97,12 @@ const TravelCard: React.FC<props> = ({title, description, imageUrl, ratings, pri
         </View>
       </View>
       <Text style={styles.cardTitle}>{title}</Text>
-      <Ratings star={ratings} text={`${ratings} Ratings`} textStyle={styles.ratingText}/>
+      <Ratings star={ratings} text={`${ratings} Ratings`} textStyle={styles.ratingText} />
       <Text style={styles.description}>RM {price}/night</Text>
     </View>
   );
 };
+
 const styles = StyleSheet.create({
   cardImage: {
     height: 230,
@@ -97,7 +141,7 @@ const styles = StyleSheet.create({
     width: 40,
     borderRadius: 30,
     justifyContent: 'center',
-    elevation: 15
+    elevation: 15,
   },
   icon: {
     alignSelf: 'center',
@@ -108,8 +152,9 @@ const styles = StyleSheet.create({
     fontSize: 14,
     marginTop: 3,
   },
-  ratingText:{
-    color: PRIMARY
-  }
+  ratingText: {
+    color: PRIMARY,
+  },
 });
+
 export default TravelCard;

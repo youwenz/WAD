@@ -2,27 +2,26 @@ import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import { PRIMARY } from '../Style/Color';
 import Ratings from '../Home/Ratings';
-import Homestay from '../../models/Homestay';
-
+import { WishItem } from '../WishList/wishItemTypes';
 
 interface Props {
-  homestay: Homestay;
+  item: WishItem;
   onPress: () => void;
 }
 
-const WishListCard: React.FC<Props> = ({ homestay, onPress }) => {
+const WishListCard: React.FC<Props> = ({ item, onPress }) => {
 
   return (
     <TouchableOpacity onPress={onPress} style={styles.wishListContainer}>
-      <Image style={styles.image} source={homestay.imageUrl} />
+      <Image style={styles.image} source={typeof item.image === 'string' ? { uri: item.image } : item.image} />
       <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{homestay.title}</Text>
+        <Text style={styles.title}>{item.title}</Text>
         <View>
-          <Ratings star={homestay.ratings} textStyle={styles.ratingText} text={`100 reviews`}/>
+          <Ratings star={item.ratings} textStyle={styles.ratingText} text={`${item.ratings} Ratings`}/>
         </View>
-        <Text style={styles.subTitle}>{homestay.city}</Text>
+        <Text style={styles.subTitle}>{item.city}</Text>
         <View style={styles.priceContainer}>
-          <Text style={styles.price}>from ${homestay.price}</Text>
+          <Text style={styles.price}>from ${item.price}</Text>
           <Text style={styles.person}>/person</Text>
         </View>
         <Text style={styles.day}>2 day 1 night</Text>

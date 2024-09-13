@@ -18,7 +18,6 @@ import BookingDetailsScreen from '../Screen/BookingDetails/BookingDetailsScreen'
 import PaymentMethodScreen from '../Screen/Payment/PaymentMethodScreen';
 import CreditDebitCardScreen from '../Screen/Payment/CreditDebitCardScreen';
 import TngoScreen from '../Screen/Payment/TngoScreen';
-import {FavouritesProvider} from '../Screen/WishList/FavouriteContext';
 import ChatScreen from './History/ChatScreen';
 import {saveHomestayList} from '../models/AsyncStorage';
 
@@ -45,7 +44,6 @@ const App: React.FC<ScreenProps> = ({setIsLoggedIn}) => {
   saveHomestayList();
   return (
     <SafeAreaProvider>
-      <FavouritesProvider>
         <StatusBar translucent backgroundColor="transparent" />
         <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen name="Main">
@@ -98,7 +96,6 @@ const App: React.FC<ScreenProps> = ({setIsLoggedIn}) => {
             options={{headerShown: true, title: 'Chat with host'}}
           />
         </Stack.Navigator>
-      </FavouritesProvider>
     </SafeAreaProvider>
   );
 }

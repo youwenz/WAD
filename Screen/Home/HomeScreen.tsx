@@ -139,7 +139,7 @@ const HomeScreen: React.FC = () => {
                   <TravelCard
                     title={item.title}
                     description={item.city}
-                    imageUrl={item.imageUrl}
+                    image={item.image}
                     price={item.price}
                     ratings={item.ratings}
                     listing_id={item.listing_id}
@@ -204,7 +204,7 @@ const HomeScreen: React.FC = () => {
                   <TravelCard
                     title={item.title}
                     description={item.city}
-                    imageUrl={item.imageUrl}
+                    image={item.image}
                     price={item.price}
                     ratings={item.ratings}
                     listing_id={item.listing_id}
@@ -224,7 +224,7 @@ const HomeScreen: React.FC = () => {
                   <TravelCard
                     title={item.title}
                     description={item.city}
-                    imageUrl={item.imageUrl}
+                    image={item.image}
                     price={item.price}
                     ratings={item.ratings}
                     listing_id={item.listing_id}
