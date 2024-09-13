@@ -114,7 +114,7 @@ const homestayList: Homestay[] = [
     2,
   ),
   new Homestay(
-    10, // listing_id
+    10, 
     'Mountain Hideaway',
     'Aspen',
     '200 Snowmass Road, Aspen, CO 81611, USA',
