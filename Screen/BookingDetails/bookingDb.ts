@@ -1,8 +1,6 @@
 import { SQLiteDatabase, enablePromise, openDatabase } from 'react-native-sqlite-storage';
 
 const databaseName = 'bookingDB';
-
-// Enable promise for SQLite
 enablePromise(true);
 
 export const getDBConnection = async () => {

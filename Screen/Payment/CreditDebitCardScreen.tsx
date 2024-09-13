@@ -11,11 +11,13 @@ import {
   Platform,
   Keyboard,
   TouchableWithoutFeedback,
-  Modal // Import Modal
+  Modal,
+  Alert
 } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { PRIMARY } from '../Style/Color'; 
-import BottomBar from '../Home/BottomBar'; // Ensure this is correctly imported
+import BottomBar from '../Home/BottomBar'; 
+import { getDBConnection, addBooking } from '../BookingDetails/bookingDb';
 
 const CreditDebitCardScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -23,10 +25,11 @@ const CreditDebitCardScreen: React.FC = () => {
   const [cvv, setCvv] = useState('');
   const [cardHolderName, setCardHolderName] = useState('');
   const [errors, setErrors] = useState({ cardNumber: '', cvv: '', cardHolderName: '' });
-  const [success, setSuccess] = useState(false); // State to handle success message visibility
-  const [modalVisible, setModalVisible] = useState(false); // Added state for modal visibility
+  const [success, setSuccess] = useState(false); 
+  const [modalVisible, setModalVisible] = useState(false); 
+  const route = useRoute();
+  const { hotelName, checkInDate, checkOutDate, price, phoneNumber, orderId } = route.params;
 
-  // Validate fields before submission
   const validateFields = () => {
     const newErrors = { cardNumber: '', cvv: '', cardHolderName: '' };
 
@@ -51,21 +54,25 @@ const CreditDebitCardScreen: React.FC = () => {
   };
 
   const handleProceedPayment = async () => {
-    if (!validateFields()) return; // Validate fields before proceeding
-
+    if (!validateFields()) {
+      Alert.alert(
+        'Invalid Input',
+        'Please ensure all fields are filled in correctly.',
+        [{ text: 'OK' }]
+      );
+      return;
+    }
+  
     try {
-      // Placeholder for actual database interaction logic
-      // Example:
-      // const db = await getDBConnection();
-      // await addBooking(db, hotelName, checkInDate, checkOutDate, price);
-      
+      const db = await getDBConnection();
+      await addBooking(db, hotelName, checkInDate, checkOutDate, price);
       setSuccess(true); // Set success to true to show the modal
-      setModalVisible(true); // Show modal after successful booking
+      setModalVisible(true);
     } catch (error) {
       console.error('Failed to add booking:', error);
     }
   };
-
+  
   // Navigation functions
   const handleBackToHome = () => {
     setModalVisible(false);
@@ -96,7 +103,7 @@ const CreditDebitCardScreen: React.FC = () => {
                   value={cardNumber}
                   onChangeText={setCardNumber}
                   keyboardType="numeric"
-                  maxLength={19} // Allow up to 19 digits
+                  maxLength={19} 
                 />
                 {errors.cardNumber ? <Text style={styles.errorText}>{errors.cardNumber}</Text> : null}
               </View>
@@ -180,10 +187,10 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: '#FFFFFF', // Ensure background color matches TnGo style
+    backgroundColor: '#FFFFFF', 
     borderTopWidth: 1,
-    borderTopColor: '#DCDCDC', // Light border color at the top
-    alignItems: 'center', // Center button horizontally
+    borderTopColor: '#DCDCDC', 
+    alignItems: 'center', 
     justifyContent: 'center',
   },
   modalContainer: {

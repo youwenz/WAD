@@ -12,7 +12,6 @@ const TngoScreen: React.FC = () => {
   const route = useRoute();
   const [modalVisible, setModalVisible] = useState(false);
 
-  // Destructure the params from route
   const { hotelName, checkInDate, checkOutDate, price, phoneNumber, orderId } = route.params;
 
   const handleProceedPayment = async () => {
@@ -21,13 +20,13 @@ const TngoScreen: React.FC = () => {
       console.log('Database connection established');
       await addBooking(db, hotelName, checkInDate, checkOutDate, price);
       console.log('Booking added successfully');
-      setModalVisible(true); // Show modal after successful booking
+      setModalVisible(true); 
     } catch (error) {
       console.error('Failed to add booking:', error);
     }
   };
 
-  // Navigation functions
+
   const handleBackToHome = () => {
     setModalVisible(false);
     navigation.navigate('Home');

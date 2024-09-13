@@ -87,7 +87,6 @@ const BookingHistoryScreen: React.FC = () => {
         />
       )}
 
-      {/* Custom Delete Confirmation Modal */}
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -190,7 +189,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Dark background for the modal
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', 
   },
   modalContent: {
     width: '80%',
@@ -225,7 +224,7 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   deleteButton: {
-    backgroundColor: '#FF6347', // Red background for delete
+    backgroundColor: '#FF6347',
     padding: 10,
     borderRadius: 10,
   },

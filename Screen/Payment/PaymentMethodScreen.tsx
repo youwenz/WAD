@@ -57,12 +57,12 @@ const PaymentMethodScreen: React.FC = () => {
         styles.paymentOption,
         {
           borderColor: selectedId === item.id || hoveredId === item.id ? '#776B5D' : '#C4C4C4',
-          backgroundColor: '#fff', // Always white
-          shadowColor: selectedId === item.id ? '#776B5D' : 'transparent', // Shadow color when selected
-          shadowOffset: { width: 0, height: 4 }, // Shadow offset
-          shadowOpacity: selectedId === item.id ? 0.3 : 0, // Shadow opacity when selected
-          shadowRadius: 8, // Shadow radius
-          elevation: selectedId === item.id ? 8 : 0, // Elevation for Android shadow
+          backgroundColor: '#fff',
+          shadowColor: selectedId === item.id ? '#776B5D' : 'transparent', 
+          shadowOffset: { width: 0, height: 4 }, 
+          shadowOpacity: selectedId === item.id ? 0.3 : 0, 
+          shadowRadius: 8, 
+          elevation: selectedId === item.id ? 8 : 0, 
         },
       ]}
       onTouchStart={() => setHoveredId(item.id)}
@@ -77,7 +77,7 @@ const PaymentMethodScreen: React.FC = () => {
           styles.selectButton,
           {
             borderColor: selectedId === item.id ? '#776B5D' : '#C4C4C4',
-            backgroundColor: selectedId === item.id ? '#fff' : 'transparent', // Fill color when not selected
+            backgroundColor: selectedId === item.id ? '#fff' : 'transparent', 
           }
         ]}
         onPress={() => setSelectedId(item.id)}
@@ -126,13 +126,11 @@ const PaymentMethodScreen: React.FC = () => {
 
           <View style={styles.hotelInfo}>
             <Text style={styles.hotelName}>{hotelName}</Text>
-            {/* Display generated order ID */}
             <Text style={styles.orderNumber}>Order #: {orderId}</Text>
           </View>
         </View>
 
         <View style={styles.priceSection}>
-          {/* Align the price to the right */}
           <Text style={styles.priceAmount}>RM{price}</Text>
         </View>
       </View>
@@ -160,7 +158,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    // Move screen content up by removing extra margin at the top
   },
   scrollContainer: {
     padding: 16,
@@ -190,13 +187,13 @@ const styles = StyleSheet.create({
   },
   priceSection: {
     flexDirection: 'row',
-    justifyContent: 'flex-end', // Align price to the right
+    justifyContent: 'flex-end', 
     marginHorizontal: 20,
     marginBottom: 20,
     borderTopWidth: 1, 
     borderBottomWidth: 1, 
     borderColor: '#C4C4C4',
-    paddingVertical: 10, // Padding for vertical spacing
+    paddingVertical: 10,
   },
   priceAmount: {
     fontSize: 18,
@@ -232,7 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 10,
-    backgroundColor: 'transparent', // Initially transparent
+    backgroundColor: 'transparent', 
   },
   innerCircle: {
     width: 20,
