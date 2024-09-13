@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,41 +7,29 @@ import {
   Dimensions,
   ScrollView,
   Modal,
+  TextInput,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import ArrowIcon from 'react-native-vector-icons/FontAwesome6';
 import DollarIcon from 'react-native-vector-icons/FontAwesome5';
-import {PRIMARY, SECONDARY} from '../Style/Color';
+import { PRIMARY } from '../Style/Color';
 import ReviewCard from './ReviewCard';
 import BottomBar from './BottomBar';
-import {
-  RootStackParamList,
-  RootStackNavigationProp,
-} from '../Type/NavigationParamList';
 import CustomButton from './CustomButton';
-import {RouteProp} from '@react-navigation/native';
+import { RouteProp } from '@react-navigation/native';
 import Ratings from './Ratings';
 import { addToWishlist, getWishlist, removeFromWishlist } from '../WishList/wishlistService';
-import MapPreview  from './Location'
+import MapPreview from './Location';
 import { WishItem } from '../WishList/wishItemTypes';
-import Homestay from '../../models/Homestay';
-import { TextInput} from 'react-native-gesture-handler';
-import {Review, getReviewsByHomestayId, addReview} from './ReviewSection';
+import { Review, getReviewsByHomestayId, addReview } from './ReviewSection';
 import { format } from 'date-fns';
 import { styles } from './DetailScreenStyle';
+import { RootStackParamList, RootStackNavigationProp } from '../Type/NavigationParamList';
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
-};
-
-const isWishItem = (item: any): item is WishItem => {
-  return (item as WishItem).listing_id !== undefined;
-};
-
-const isHomestay = (item: any): item is Homestay => {
-  return (item as Homestay).listing_id !== undefined; 
 };
 
 const DetailScreen: React.FC<Props> = ({ route }) => {
@@ -152,6 +140,7 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
       price: item.price,
     });
   };
+
 
   return (
     <View style={styles.container}>

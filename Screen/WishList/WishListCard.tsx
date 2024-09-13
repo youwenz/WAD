@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { PRIMARY } from '../Style/Color';
 import Ratings from '../Home/Ratings';
 import { WishItem } from '../WishList/wishItemTypes';
