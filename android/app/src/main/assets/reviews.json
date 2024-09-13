@@ -1,0 +1,163 @@
+[
+    {
+      "homestayId": 1,
+      "name": "Amber Heard",
+      "text": "Recommend for anyone looking for a comfort place.",
+      "title": "Good Experience",
+      "ratings": 4.5,
+      "date": "12 June 2023"
+    },
+    {
+      "homestayId": 1,
+      "name": "Johnny Depp",
+      "text": "The room service was nice! Views are amazing! The price is reasonable for this stay.",
+      "title": "Great Service",
+      "ratings": 3.5,
+      "date": "14 May 2023"
+    },
+    {
+      "homestayId": 2,
+      "name": "Kim Kardashian",
+      "text": "The host was welcoming, good place to stay.",
+      "title": "Cool Place",
+      "ratings": 4,
+      "date": "22 April 2023"
+    },
+    {
+      "homestayId": 2,
+      "name": "Elon Musk",
+      "text": "Great location, but needs improvement on service.",
+      "title": "Nice Stay",
+      "ratings": 3,
+      "date": "28 March 2023"
+    },
+    {
+      "homestayId": 3,
+      "name": "Bill Gates",
+      "text": "Very clean and well-maintained place.",
+      "title": "Well Maintained",
+      "ratings": 5,
+      "date": "10 April 2023"
+    },
+    {
+        "homestayId": 3,
+        "name": "Oprah Winfrey",
+        "text": "Amazing stay! Hospitality was top-notch.",
+        "title": "Outstanding",
+        "ratings": 5,
+        "date": "05 May 2023"
+      },
+      {
+        "homestayId": 4,
+        "name": "Steve Jobs",
+        "text": "Design of the place was aesthetically pleasing.",
+        "title": "Great Design",
+        "ratings": 4,
+        "date": "15 May 2023"
+      },
+      {
+        "homestayId": 4,
+        "name": "Jeff Bezos",
+        "text": "Comfortable stay, great customer service.",
+        "title": "Nice Stay",
+        "ratings": 4,
+        "date": "20 May 2023"
+      },
+      {
+        "homestayId": 5,
+        "name": "Mark Zuckerberg",
+        "text": "Good place, but needs more privacy options.",
+        "title": "Nice Place",
+        "ratings": 3,
+        "date": "25 April 2023"
+      },
+      {
+        "homestayId": 5,
+        "name": "Larry Page",
+        "text": "Everything was good, but location could be better.",
+        "title": "Good but Not Great",
+        "ratings": 3.5,
+        "date": "12 March 2023"
+      },
+      {
+        "homestayId": 6,
+        "name": "Sergey Brin",
+        "text": "Very clean, but the host wasn’t very responsive.",
+        "title": "Clean but Unresponsive",
+        "ratings": 3,
+        "date": "03 April 2023"
+      },
+      {
+        "homestayId": 6,
+        "name": "Tim Cook",
+        "text": "Great amenities and very convenient location.",
+        "title": "Highly Convenient",
+        "ratings": 4.5,
+        "date": "18 May 2023"
+      },
+      {
+        "homestayId": 7,
+        "name": "Warren Buffett",
+        "text": "Excellent experience, worth every penny.",
+        "title": "Worth It",
+        "ratings": 5,
+        "date": "11 June 2023"
+      },
+      {
+        "homestayId": 7,
+        "name": "Charlie Munger",
+        "text": "Good place, but a bit overpriced for the service provided.",
+        "title": "A Bit Overpriced",
+        "ratings": 3.5,
+        "date": "22 April 2023"
+      },
+      {
+        "homestayId": 8,
+        "name": "Barack Obama",
+        "text": "Incredible stay! Would love to come back.",
+        "title": "Unforgettable",
+        "ratings": 5,
+        "date": "15 May 2023"
+      },
+      {
+        "homestayId": 8,
+        "name": "Michelle Obama",
+        "text": "Quiet and peaceful, perfect for a weekend retreat.",
+        "title": "Peaceful Stay",
+        "ratings": 4.5,
+        "date": "18 April 2023"
+      },
+      {
+        "homestayId": 9,
+        "name": "Elon Musk",
+        "text": "Well worth the price, but some facilities could be improved.",
+        "title": "Good Value",
+        "ratings": 4,
+        "date": "10 March 2023"
+      },
+      {
+        "homestayId": 9,
+        "name": "Grimes",
+        "text": "Loved the modern decor, but the internet speed was lacking.",
+        "title": "Modern but Slow Internet",
+        "ratings": 3.5,
+        "date": "12 May 2023"
+      },
+      {
+        "homestayId": 10,
+        "name": "J.K. Rowling",
+        "text": "Magical experience, just like in the books.",
+        "title": "Magical Stay",
+        "ratings": 5,
+        "date": "01 May 2023"
+      },
+      {
+        "homestayId": 10,
+        "name": "Daniel Radcliffe",
+        "text": "A magical place indeed! Highly recommend.",
+        "title": "Enchanting Stay",
+        "ratings": 5,
+        "date": "12 April 2023"
+      }
+  ]
+  
