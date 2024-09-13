@@ -13,7 +13,7 @@ import {
 import io from 'socket.io-client';
 import {PRIMARY, SECONDARY} from '../Style/Color';
 
-const socket = io('http://192.168.1.103:5000', {transports: ['websocket']});
+const socket = io('http://10.0.2.2:5000', {transports: ['websocket']});
 
 const ChatScreen = () => {
   const [messages, setMessages] = useState<{sender: string; text: string}[]>(
