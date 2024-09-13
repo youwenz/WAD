@@ -23,25 +23,19 @@ import {
 import CustomButton from './CustomButton';
 import {RouteProp} from '@react-navigation/native';
 import Ratings from './Ratings';
-<<<<<<< HEAD
 import { addToWishlist, getWishlist, removeFromWishlist } from '../WishList/wishlistService';
 import MapPreview  from './Location'
 import { WishItem } from '../WishList/wishItemTypes';
 import Homestay from '../../models/Homestay';
-=======
-import {useFavourites} from '../WishList/FavouriteContext';
-import MapPreview from './Location';
 import { TextInput} from 'react-native-gesture-handler';
 import {Review, getReviewsByHomestayId, addReview} from './ReviewSection';
 import { format } from 'date-fns';
 import { styles } from './DetailScreenStyle';
->>>>>>> 5fdb2d02d9025fafd3880feade205372321da347
 
 type Props = {
   route: RouteProp<RootStackParamList, 'DetailScreen'>;
 };
 
-<<<<<<< HEAD
 const isWishItem = (item: any): item is WishItem => {
   return (item as WishItem).listing_id !== undefined;
 };
@@ -54,31 +48,29 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
   const { item } = route.params;
   const screenWidth = Dimensions.get('window').width;
   const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
-  
+
   const [favourite, setFavourite] = useState(false);
-  const [currentItem, setCurrentItem] = useState(item);
+  const [title, setTitle] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [review, setReview] = useState('');
+  const [homestayReviews, setHomestayReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     if (item) {
-      setCurrentItem(item);
-    }
-  }, [item]);
-
-  useFocusEffect(
-    React.useCallback(() => {
       const fetchWishlist = async () => {
         try {
           const wishlist = await getWishlist();
-          const isFavorited = wishlist.some((wishItem) => wishItem.listing_id === item.listing_id);
+          const isFavorited = wishlist.some(wishItem => wishItem.listing_id === item.listing_id);
           setFavourite(isFavorited);
         } catch (error) {
           console.error('Error fetching wishlist:', error);
         }
       };
-  
+
       fetchWishlist();
-    }, [item.listing_id])
-  );
+    }
+  }, [item]);
 
   const toggleFavourite = async () => {
     if (item.listing_id === undefined) {
@@ -89,7 +81,7 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
     const itemToAdd: WishItem = {
       listing_id: item.listing_id,
       title: item.title,
-      image: item.image, 
+      image: item.image,
       ratings: item.ratings,
       city: item.city,
       address: item.address,
@@ -105,56 +97,39 @@ const DetailScreen: React.FC<Props> = ({ route }) => {
       } else {
         await addToWishlist(itemToAdd);
       }
-      setFavourite(!favourite);
+      setFavourite(prev => !prev);
     } catch (error) {
       console.error('Error toggling favourite:', error);
-=======
-const DetailScreen: React.FC<Props> = ({route}) => {
-  const {item} = route.params;
-  const screenWidth = Dimensions.get('window').width;
-  const navigation = useNavigation<RootStackNavigationProp<'DetailScreen'>>();
-
-  const {addFavourite, removeFavourite, isFavourite} = useFavourites();
-  const [favourite, setFavourite] = useState(false);
-  const [title, setTitle] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
-  const [rating, setRating] = useState(0);
-  const [review, setReview] = useState('');
-  const [homestayReviews, setHomestayReviews] = useState<Review[]>([]);
-
-  const handleStarPress = (star: number) => {
-    setRating(star);
+    }
   };
 
-  async function addNewReview(newReview: Review) {
+  const handleStarPress = (star: number) => setRating(star);
+
+  const addNewReview = async (newReview: Review) => {
     try {
       await addReview(newReview.homestayId, newReview);
       console.log('Review added successfully!');
     } catch (error) {
       console.error('Error adding review:', error);
     }
-  }
+  };
 
-  function formatDate(dateString: string) {
-    const date = new Date(dateString);
-    return format(date, 'd MMMM yyyy');
-  }
-  
+  const formatDate = (dateString: string) => format(new Date(dateString), 'd MMMM yyyy');
 
   const submitReview = () => {
     const newReview: Review = {
       homestayId: item.listing_id,
       name: 'You',
-      title: title,
+      title,
       text: review,
       ratings: rating,
       date: formatDate(new Date().toISOString())
-    }
+    };
     setTitle('');
     setRating(0);
     setReview('');
     addNewReview(newReview);
-    setModalVisible(false); 
+    setModalVisible(false);
   };
 
   useEffect(() => {
@@ -165,52 +140,25 @@ const DetailScreen: React.FC<Props> = ({route}) => {
       } catch (error) {
         console.error('Error fetching reviews:', error);
       }
-
     };
 
     fetchReviews();
   }, [item.listing_id]);
 
-  useEffect(() => {
-    setFavourite(isFavourite(item.listing_id));
-  }, [item.listing_id, isFavourite]);
-
-  const toggleFavourite = () => {
-    if (favourite) {
-      removeFavourite(item.listing_id);
-    } else {
-      addFavourite(item);
->>>>>>> 5fdb2d02d9025fafd3880feade205372321da347
-    }
-  };
-
   const navigateToCalendar = () => {
     navigation.navigate('CalendarScreen', {
-<<<<<<< HEAD
-      hotelName: item.title,  
-      hotelImage: item.image,  
-      price: item.price  
-  });
-};
-=======
       hotelName: item.title,
-      hotelImage: item.imageUrl,
+      hotelImage: item.image,
       price: item.price,
     });
   };
->>>>>>> 5fdb2d02d9025fafd3880feade205372321da347
 
   return (
     <View style={styles.container}>
       <ScrollView style={{marginBottom: 100}}>
         <ImageBackground
-<<<<<<< HEAD
           source={item.image}
           style={[styles.coverImage, { width: screenWidth }]}>
-=======
-          source={item.imageUrl}
-          style={[styles.coverImage, {width: screenWidth}]}>
->>>>>>> 5fdb2d02d9025fafd3880feade205372321da347
           <LinearGradient
             colors={['rgba(0,0,0,0)', 'rgba(0,0,0,0.8)']}
             style={styles.gradient}>
