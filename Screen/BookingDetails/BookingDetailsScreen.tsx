@@ -50,9 +50,11 @@ const BookingDetailsScreen: React.FC = () => {
         checkInDate: route.params.checkInDate,
         checkOutDate: route.params.checkOutDate,
       });
-      console.log('Button pressed!');
+    } else {
+      Alert.alert('Invalid Input', 'Please ensure all fields are filled in correctly.');
     }
   };
+  
 
   return (
     <KeyboardAvoidingView
@@ -131,7 +133,7 @@ const BookingDetailsScreen: React.FC = () => {
           </ScrollView>
           <BottomBar style={styles.bottomBar}>
             <View style={styles.bottomBarContent}>
-              <Text style={styles.totalPrice}>Total Price: {price}</Text>
+              <Text style={styles.totalPrice}>Total Price: ${price}</Text>
               <CustomButton text="Next" onPressFunction={handleSubmit} />
             </View>
           </BottomBar>

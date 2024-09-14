@@ -1,11 +1,11 @@
 import React , {useState, useEffect} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {useFavourites} from '../WishList/FavouriteContext';
+import {useNavigation, useFocusEffect } from '@react-navigation/native';
 import {getDBConnection, getUsers } from '../Login/database.ts';
 import {PRIMARY} from '../Style/Color';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { navigate } from '../NavigationService';
+import { getWishlist } from '../WishList/wishlistService'; 
 
 const profile1 = require('../../assets/images/profile1.jpg');
 
@@ -16,7 +16,7 @@ interface ProfileScreenProps {
 const ProfileScreen: React.FC<ProfileScreenProps> = ({setIsLoggedIn}) => {
   const navigation = useNavigation();
   const [profile, setProfile] = useState<any>(null);
-  const {favourites, bucketListCount} = useFavourites();
+  const [wishlistCount, setWishlistCount] = useState<number>(0);
 
   const fetchUserProfile = async () => {
     try {
@@ -34,9 +34,23 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({setIsLoggedIn}) => {
     }
   }
 
+  const fetchWishlistCount = async () => {
+    try {
+      const wishlist = await getWishlist(); 
+      setWishlistCount(wishlist.length);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+      setWishlistCount(0);
+    }
+  };
+
   useEffect(() => {
     fetchUserProfile();
   }, []);
+
+  useFocusEffect(() => {
+    fetchWishlistCount();
+  });
 
   if (!profile) {
     return <Text>Loading...</Text>;
@@ -64,7 +78,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({setIsLoggedIn}) => {
         <View style={styles.verticalLine} />
         <View style={styles.travelDetailsInnerContainer}>
           <Text style={styles.travelDetailsTitle}>Bucket List</Text>
-          <Text style={styles.travelDetailsText}>{bucketListCount}</Text>
+          <Text style={styles.travelDetailsText}>{wishlistCount}</Text>
         </View>
       </View>
       <View style={styles.horizontalLine} />

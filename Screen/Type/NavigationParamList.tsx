@@ -1,6 +1,7 @@
 import Homestay from '../../models/Homestay';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {RouteProp} from '@react-navigation/native';
+import { WishItem } from '../WishList/wishItemTypes';
 
 // Define a type stack navigator screens
 export type RootStackParamList = {
@@ -43,7 +44,7 @@ export type MainTabRouteProp<T extends keyof MainTabParamList> = RouteProp<
 >;
 
 interface DetailScreenParams {
-  item: Homestay;
+  item: Homestay | WishItem;
   title: string;
   imageUrl: string;
 }
