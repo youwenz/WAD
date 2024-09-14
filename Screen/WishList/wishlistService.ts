@@ -1,6 +1,6 @@
 import { WishItem } from '../WishList/wishItemTypes';
 
-const API_URL = 'http://172.20.10.6:5000/api/wishlist';
+const API_URL = 'http://10.0.2.2:5000/api/wishlist';
 
 // Add item to wishlist
 export const addToWishlist = async (item: WishItem) => {
